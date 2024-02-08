@@ -32,6 +32,38 @@ const Donate = () => {
     return selectedButton3 === buttonIndex3;
   };
 
+
+  // STUFF FOR RENDERING THE BOTTOM TEXT
+  const getDonationDescription = () => {
+    if (isButtonSelected1(0)) {
+      return "One-Time Donation";
+    } else if (isButtonSelected1(1)) {
+      let frequency = "";
+      if (isButtonSelected3(3)) {
+        frequency = "Daily";
+      } else if (isButtonSelected3(4)) {
+        frequency = "Weekly";
+      } else if (isButtonSelected3(5)) {
+        frequency = "Monthly";
+      }
+      return `${frequency} Donation`;
+    }
+    // Default to a generic description
+    return "Select donation type";
+  };
+
+  const getAmountText = () => {
+    if (isButtonSelected2(3)) {
+      return "$25";
+    } else if (isButtonSelected2(4)) {
+      return "$50";
+    } else if (isButtonSelected2(5)) {
+      return "$100";
+    }
+    // Default to a generic amount
+    return "$25";
+  };
+
   const initialState: State = {
     outlinedText: '',
     iconsColor: {
@@ -72,8 +104,8 @@ const Donate = () => {
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal} >
           <Text variant="titleLarge">Confirm Your Donation</Text>
           <Text>To: Ocean Alliance</Text>
-          <Text>Amount: $25 USD</Text>
-          <Text>Frequency: Weekly</Text>
+          <Text>Amount:  {getAmountText()} USD</Text>
+          <Text>Frequency: {getDonationDescription()}</Text>
           <Button mode="contained" style={styles.button}>
            CONFIRM
           </Button>
@@ -198,7 +230,7 @@ const Donate = () => {
            GIVE NOW!
           </Button>
           <Text variant="titleMedium">
-            Weekly Donation $25 USD
+            {getDonationDescription()} {getAmountText()} USD
           </Text>
       </View>
     </SafeAreaView>
