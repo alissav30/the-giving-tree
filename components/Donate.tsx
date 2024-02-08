@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { Button, TextInput, Text, Modal, Portal, PaperProvider, ToggleButton} from 'react-native-paper';
 import { inputReducer, State } from '../utils';
@@ -34,6 +34,7 @@ const Donate = () => {
 
 
   // STUFF FOR RENDERING THE BOTTOM TEXT
+  
   const getDonationDescription = () => {
     if (isButtonSelected1(0)) {
       return "One-Time Donation";
@@ -53,15 +54,21 @@ const Donate = () => {
   };
 
   const getAmountText = () => {
-    if (isButtonSelected2(3)) {
-      return "$25";
-    } else if (isButtonSelected2(4)) {
-      return "$50";
-    } else if (isButtonSelected2(5)) {
-      return "$100";
+    // If there's text in the TextInput, use it as the amount
+    if (outlinedText.trim() !== '') {
+      return `$${outlinedText} USD`;
+    } else {
+      // Otherwise, use the selected button value
+      if (isButtonSelected2(3)) {
+        return "$25.00 USD";
+      } else if (isButtonSelected2(4)) {
+        return "$50.00 USD";
+      } else if (isButtonSelected2(5)) {
+        return "$100.00 USD";
+      }
+      // Default to an empty string
+      return "";
     }
-    // Default to a generic amount
-    return "$25";
   };
 
   const initialState: State = {
@@ -86,6 +93,14 @@ const Donate = () => {
       customIcon,
     },
   } = state;
+
+  useEffect(() => {
+    // This effect will run whenever outlinedText changes
+    if (outlinedText.trim() !== '') {
+      // If there's text in the TextInput, use it as the amount
+      setSelectedButton2(null); // Deselect all buttons
+    }
+  }, [outlinedText]);
 
   const inputActionHandler = (type: keyof State, payload: string) =>
     dispatch({
@@ -114,7 +129,7 @@ const Donate = () => {
       <Text variant="titleMedium">
         Your Donation To
       </Text>
-      <Text variant="displayMedium">
+      <Text variant="displayMedium" style={styles.input}>
         Ocean Alliance
       </Text>
       {/* First row of buttons */}
@@ -209,7 +224,8 @@ const Donate = () => {
         maxLength={10}
         
       />
-       <Text variant="titleSmall">
+      
+       <Text variant="titleSmall" style={styles.input}>
         Payment Method:
       </Text>
       <TextInput
@@ -223,15 +239,23 @@ const Donate = () => {
           />
         }
         maxLength={10}
+
         
       />
       <View style={styles.row}>
-          <Button mode="contained" onPress={showModal} style={styles.button}>
-           GIVE NOW!
+          <Button mode="contained" onPress={showModal} style={styles.bigbutton}>
+            <Text variant="titleLarge" style={styles.whiteText}>
+              GIVE NOW!
+            </Text>
           </Button>
-          <Text variant="titleMedium">
-            {getDonationDescription()} {getAmountText()} USD
+          <View>
+          <Text variant="titleSmall">
+            {getDonationDescription()}
           </Text>
+          <Text variant="titleMedium">
+            {getAmountText()}
+          </Text>
+          </View>
       </View>
     </SafeAreaView>
     </PaperProvider>
@@ -247,6 +271,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginVertical: 10,
   },
   button: {
     margin: 5,
@@ -256,7 +281,16 @@ const styles = StyleSheet.create({
     padding: 40,
     alignSelf: 'center', // Center horizontally
     justifyContent: 'center', // Center vertically
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  input: {
+    marginVertical: 10, // Add vertical margin to the TextInput
+  },
+  bigbutton: {
+    margin: 10,
+  },
+  whiteText: {
+    color: 'white',
   },
 });
 
