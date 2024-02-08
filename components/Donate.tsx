@@ -1,18 +1,39 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Button, TextInput, Text, Modal, Portal, PaperProvider} from 'react-native-paper';
+import { Button, TextInput, Text, Modal, Portal, PaperProvider, ToggleButton} from 'react-native-paper';
 import { inputReducer, State } from '../utils';
 
 const Donate = () => {
-  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedButton1, setSelectedButton1] = useState(null);
+  const [selectedButton2, setSelectedButton2] = useState(null);
+  const [selectedButton3, setSelectedButton3] = useState(null);
 
-  const handlePress = (buttonIndex) => {
-    setSelectedButton(buttonIndex);
-    // Add any additional logic or functionality here
+  const [isRecurringSelected, setIsRecurringSelected] = useState(false);
+
+  const handlePress1 = (buttonIndex1) => {
+    setSelectedButton1(buttonIndex1);
+    setIsRecurringSelected(buttonIndex1 === 1);
   };
 
-  const isButtonSelected = (buttonIndex) => {
-    return selectedButton === buttonIndex;
+  const isButtonSelected1 = (buttonIndex1) => {
+    return selectedButton1 === buttonIndex1;
+  };
+
+
+  const handlePress2 = (buttonIndex2) => {
+    setSelectedButton2(buttonIndex2);
+  };
+
+  const isButtonSelected2 = (buttonIndex2) => {
+    return selectedButton2 === buttonIndex2;
+  };
+
+  const handlePress3 = (buttonIndex3) => {
+    setSelectedButton3(buttonIndex3);
+  };
+
+  const isButtonSelected3 = (buttonIndex3) => {
+    return selectedButton3 === buttonIndex3;
   };
 
   const initialState: State = {
@@ -71,44 +92,73 @@ const Donate = () => {
       {/* First row of buttons */}
       <View style={styles.row}>
         <Button
-          mode={isButtonSelected(0) ? 'contained' : 'outlined'}
-          onPress={() => handlePress(0)}
+          mode={isButtonSelected1(0) ? 'contained' : 'outlined'}
+          onPress={() => handlePress1(0)}
           style={styles.button}
         >
           One-Time
         </Button>
         <Button
-          mode={isButtonSelected(1) ? 'contained' : 'outlined'}
-          onPress={() => handlePress(1)}
+          mode={isButtonSelected1(1) ? 'contained' : 'outlined'}
+          onPress={() => handlePress1(1)}
           style={styles.button}
         >
           Recurring
-        </Button>
-        
+        </Button>  
       </View>
 
-      {/* Second row of buttons */}
+      {isRecurringSelected && (
+          <>
+             <Text style={styles.text} variant="titleSmall">
+              How often would you like to donate?
+            </Text>
+            <View style={styles.row}>
+              <Button
+                mode={isButtonSelected3(3) ? 'contained' : 'outlined'}
+                onPress={() => handlePress3(3)}
+                style={styles.button}
+              >
+                Daily
+              </Button>
+              <Button
+                mode={isButtonSelected3(4) ? 'contained' : 'outlined'}
+                onPress={() => handlePress3(4)}
+                style={styles.button}
+              >
+                Weekly
+              </Button>
+              <Button
+                mode={isButtonSelected3(5) ? 'contained' : 'outlined'}
+                onPress={() => handlePress3(5)}
+                style={styles.button}
+              >
+                Monthly
+              </Button>
+            </View>
+          </>
+        )}
+
       <Text style={styles.text} variant="titleSmall">
         Choose an amount:
       </Text>
       <View style={styles.row}>
         <Button
-          mode={isButtonSelected(3) ? 'contained' : 'outlined'}
-          onPress={() => handlePress(3)}
+          mode={isButtonSelected2(3) ? 'contained' : 'outlined'}
+          onPress={() => handlePress2(3)}
           style={styles.button}
         >
           $25
         </Button>
         <Button
-          mode={isButtonSelected(4) ? 'contained' : 'outlined'}
-          onPress={() => handlePress(4)}
+          mode={isButtonSelected2(4) ? 'contained' : 'outlined'}
+          onPress={() => handlePress2(4)}
           style={styles.button}
         >
           $50
         </Button>
         <Button
-          mode={isButtonSelected(5) ? 'contained' : 'outlined'}
-          onPress={() => handlePress(5)}
+          mode={isButtonSelected2(5) ? 'contained' : 'outlined'}
+          onPress={() => handlePress2(5)}
           style={styles.button}
         >
           $100
@@ -126,8 +176,7 @@ const Donate = () => {
         left={
           <TextInput.Icon
             icon="currency-usd"
-            color={outlineLeftIcon}
-            
+            color={outlineLeftIcon}  
           />
         }
         maxLength={10}
@@ -140,15 +189,11 @@ const Donate = () => {
         mode="outlined"
         style={styles.inputContainerStyle}
         placeholder="**** **** **** 1234   01/26"
-        value={outlinedText}
-        onChangeText={(outlinedText) =>
-          inputActionHandler('outlinedText', outlinedText)
-        }
+        editable={false}
         left={
           <TextInput.Icon
             icon="credit-card-outline"
             color={outlineLeftIcon}
-            
           />
         }
         maxLength={10}
