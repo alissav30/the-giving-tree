@@ -14,16 +14,13 @@ const Donate = () => {
     setSelectedButton1(buttonIndex1);
     setIsRecurringSelected(buttonIndex1 === 1);
   };
-
   const isButtonSelected1 = (buttonIndex1) => {
     return selectedButton1 === buttonIndex1;
   };
 
-
   const handlePress2 = (buttonIndex2) => {
     setSelectedButton2(buttonIndex2);
   };
-
   const isButtonSelected2 = (buttonIndex2) => {
     return selectedButton2 === buttonIndex2;
   };
@@ -31,7 +28,6 @@ const Donate = () => {
   const handlePress3 = (buttonIndex3) => {
     setSelectedButton3(buttonIndex3);
   };
-
   const isButtonSelected3 = (buttonIndex3) => {
     return selectedButton3 === buttonIndex3;
   };
@@ -109,7 +105,7 @@ const Donate = () => {
 
       {isRecurringSelected && (
           <>
-             <Text style={styles.text} variant="titleSmall">
+             <Text variant="titleSmall">
               How often would you like to donate?
             </Text>
             <View style={styles.row}>
@@ -138,7 +134,7 @@ const Donate = () => {
           </>
         )}
 
-      <Text style={styles.text} variant="titleSmall">
+      <Text variant="titleSmall">
         Choose an amount:
       </Text>
       <View style={styles.row}>
@@ -167,7 +163,6 @@ const Donate = () => {
 
       <TextInput
         mode="outlined"
-        style={styles.inputContainerStyle}
         placeholder="enter custom amount"
         value={outlinedText}
         onChangeText={(outlinedText) =>
@@ -182,12 +177,11 @@ const Donate = () => {
         maxLength={10}
         
       />
-       <Text style={styles.text} variant="titleSmall">
+       <Text variant="titleSmall">
         Payment Method:
       </Text>
       <TextInput
         mode="outlined"
-        style={styles.inputContainerStyle}
         placeholder="**** **** **** 1234   01/26"
         editable={false}
         left={
@@ -226,17 +220,12 @@ const styles = StyleSheet.create({
   button: {
     margin: 5,
   },
-  text: {
-    marginTop: 20,
-    marginBottom: 8,
-  },
   modal: {
     backgroundColor: 'white',
     padding: 20,
     height: 320,
     width: 300,
   },
-  
 });
 
 export default Donate;
