@@ -4,11 +4,11 @@ import { Button, TextInput, Text, Modal, Portal, PaperProvider } from 'react-nat
 import { inputReducer, State } from '../utils';
 
 const Donate = () => {
-  const [selectedButton1, setSelectedButton1] = useState(null);
+  const [selectedButton1, setSelectedButton1] = useState(1);
   const [selectedButton2, setSelectedButton2] = useState(null);
-  const [selectedButton3, setSelectedButton3] = useState(null);
+  const [selectedButton3, setSelectedButton3] = useState(3);
 
-  const [isRecurringSelected, setIsRecurringSelected] = useState(false);
+  const [isRecurringSelected, setIsRecurringSelected] = useState(true);
 
   const handlePress1 = (buttonIndex1) => {
     setSelectedButton1(buttonIndex1);
@@ -71,9 +71,13 @@ const Donate = () => {
     }
   };
 
-  // Disable the buttons if there is text in the TextInput
+  // Disable the amount buttons if there is text in the TextInput
   const isButtonDisabled = () => {
     return outlinedText.trim() !== '';
+  };
+
+  const isDonateButtonDisabled = () => {
+    return outlinedText.trim() === '' && selectedButton2 === null;
   };
 
   const initialState: State = {
@@ -262,7 +266,7 @@ const Donate = () => {
 
       />
       <View style={styles.row}>
-          <Button mode="contained" onPress={showModal} style={styles.bigbutton}>
+          <Button mode="contained" onPress={showModal} style={styles.bigbutton} disabled={isDonateButtonDisabled()}>
             <Text variant="titleLarge" style={styles.whiteText}>
               GIVE NOW!
             </Text>
