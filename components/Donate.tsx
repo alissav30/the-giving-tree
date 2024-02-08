@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { Button, TextInput, Text, Modal, Portal, PaperProvider, ToggleButton} from 'react-native-paper';
 import { inputReducer, State } from '../utils';
 
@@ -67,9 +67,9 @@ const Donate = () => {
 
   return (
     <PaperProvider>
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Portal>
-        <Modal visible={visible} onDismiss={hideModal} style={styles.modal}>
+        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal} >
           <Text variant="titleLarge">Confirm Your Donation</Text>
           <Text>To: Ocean Alliance</Text>
           <Text>Amount: $25 USD</Text>
@@ -201,7 +201,7 @@ const Donate = () => {
             Weekly Donation $25 USD
           </Text>
       </View>
-    </View>
+    </SafeAreaView>
     </PaperProvider>
   );
 };
@@ -209,7 +209,6 @@ const Donate = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   row: {
@@ -222,9 +221,10 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: 'white',
-    padding: 20,
-    height: 320,
-    width: 300,
+    padding: 40,
+    alignSelf: 'center', // Center horizontally
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center'
   },
 });
 
