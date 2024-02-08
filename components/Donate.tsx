@@ -71,6 +71,11 @@ const Donate = () => {
     }
   };
 
+  const isButtonDisabled = () => {
+    // Disable the buttons if there is text in the TextInput
+    return outlinedText.trim() !== '';
+  };
+
   const initialState: State = {
     outlinedText: '',
     iconsColor: {
@@ -119,7 +124,7 @@ const Donate = () => {
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal} >
           <Text variant="titleLarge">Confirm Your Donation</Text>
           <Text>To: Ocean Alliance</Text>
-          <Text>Amount:  {getAmountText()} USD</Text>
+          <Text>Amount:  {getAmountText()} </Text>
           <Text>Frequency: {getDonationDescription()}</Text>
           <Button mode="contained" style={styles.button}>
            CONFIRM
@@ -189,6 +194,7 @@ const Donate = () => {
           mode={isButtonSelected2(3) ? 'contained' : 'outlined'}
           onPress={() => handlePress2(3)}
           style={styles.button}
+          disabled={isButtonDisabled()}
         >
           $25
         </Button>
@@ -196,6 +202,7 @@ const Donate = () => {
           mode={isButtonSelected2(4) ? 'contained' : 'outlined'}
           onPress={() => handlePress2(4)}
           style={styles.button}
+          disabled={isButtonDisabled()}
         >
           $50
         </Button>
@@ -203,29 +210,30 @@ const Donate = () => {
           mode={isButtonSelected2(5) ? 'contained' : 'outlined'}
           onPress={() => handlePress2(5)}
           style={styles.button}
+          disabled={isButtonDisabled()}
         >
           $100
         </Button>
       </View>
 
       <TextInput
-        mode="outlined"
-        placeholder="enter custom amount"
-        value={outlinedText}
-        onChangeText={(text) => {
-          // Use a regular expression to allow only numeric input
-          const numericText = text.replace(/[^0-9]/g, '');
-          inputActionHandler('outlinedText', numericText);
-        }}
-        keyboardType="numeric"  // Set keyboardType to 'numeric'
-        left={
-          <TextInput.Icon
-            icon="currency-usd"
-            color={outlineLeftIcon}  
-          />
-        }
-        maxLength={10}
-      />
+      mode="outlined"
+      placeholder="enter custom amount"
+      value={outlinedText}
+      onChangeText={(text) => {
+        // Use a regular expression to allow only numeric input
+        const numericText = text.replace(/[^0-9]/g, '');
+        inputActionHandler('outlinedText', numericText);
+      }}
+      keyboardType="numeric"  // Set keyboardType to 'numeric'
+      left={
+        <TextInput.Icon
+          icon="currency-usd"
+          color={outlineLeftIcon}  
+        />
+      }
+      maxLength={10}
+    />
       
        <Text variant="titleSmall" style={styles.input}>
         Payment Method:
