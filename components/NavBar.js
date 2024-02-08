@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
-import Donate from './Donate.tsx'; // Import the new component
-
+import Donate from './Donate.tsx'; 
+//import ThankYou from './ThankYou.tsx';
 
 const MusicRoute = () => <Text>Music</Text>;
 
