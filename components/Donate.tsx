@@ -132,9 +132,14 @@ const Donate = () => {
             <Text style={styles.modalText}>Amount:  {getAmountText()} </Text>
             <Text style={styles.modalText}>Frequency: {getDonationDescription()}</Text>
           </View>
+          <View style={styles.row}>
           <Button mode="contained" style={styles.button}>
            CONFIRM
           </Button>
+          <Button mode="outlined" onPress={hideModal} style={[styles.button, { marginRight: 10 }]}>
+            CANCEL
+          </Button>
+          </View>
         </Modal>
       </Portal>
       <Text variant="titleMedium">
