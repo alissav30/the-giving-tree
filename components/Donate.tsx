@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
-import { Button, TextInput, Text, Modal, Portal, PaperProvider, ToggleButton} from 'react-native-paper';
+import { Button, TextInput, Text, Modal, Portal, PaperProvider } from 'react-native-paper';
 import { inputReducer, State } from '../utils';
 
 const Donate = () => {
@@ -33,8 +33,7 @@ const Donate = () => {
   };
 
 
-  // STUFF FOR RENDERING THE BOTTOM TEXT
-  
+  // To get the Donation Description for the confirmation message  
   const getDonationDescription = () => {
     if (isButtonSelected1(0)) {
       return "One-Time Donation";
@@ -53,6 +52,7 @@ const Donate = () => {
     return "Select donation type";
   };
 
+  // To get the Amount Text for the confirmation message  
   const getAmountText = () => {
     // If there's text in the TextInput, use it as the amount
     if (outlinedText.trim() !== '') {
@@ -71,8 +71,8 @@ const Donate = () => {
     }
   };
 
+  // Disable the buttons if there is text in the TextInput
   const isButtonDisabled = () => {
-    // Disable the buttons if there is text in the TextInput
     return outlinedText.trim() !== '';
   };
 
@@ -123,9 +123,11 @@ const Donate = () => {
       <Portal>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal} >
           <Text variant="titleLarge">Confirm Your Donation</Text>
-          <Text>To: Ocean Alliance</Text>
-          <Text>Amount:  {getAmountText()} </Text>
-          <Text>Frequency: {getDonationDescription()}</Text>
+          <View style={styles.modalTextBox}>
+            <Text style={styles.modalText}>To: Ocean Alliance</Text>
+            <Text style={styles.modalText}>Amount:  {getAmountText()} </Text>
+            <Text style={styles.modalText}>Frequency: {getDonationDescription()}</Text>
+          </View>
           <Button mode="contained" style={styles.button}>
            CONFIRM
           </Button>
@@ -258,7 +260,6 @@ const Donate = () => {
         }
         maxLength={10}
 
-        
       />
       <View style={styles.row}>
           <Button mode="contained" onPress={showModal} style={styles.bigbutton}>
@@ -309,6 +310,12 @@ const styles = StyleSheet.create({
   },
   whiteText: {
     color: 'white',
+  },
+  modalText: {
+    margin: 5, 
+  },
+  modalTextBox: {
+    padding: 16, 
   },
 });
 
