@@ -12,17 +12,17 @@ const NotificationsRoute = () => <Text>Notifications</Text>;
 const NavBar = () => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: 'music', title: 'Tree', focusedIcon: 'heart', unfocusedIcon: 'heart-outline'},
-    { key: 'albums', title: 'Browse', focusedIcon: 'album' },
-    { key: 'recents', title: 'Profile', focusedIcon: 'history' },
-    { key: 'notifications', title: 'Forms', focusedIcon: 'bell', unfocusedIcon: 'bell-outline' },
+    { key: 'tree', title: 'Tree', focusedIcon: 'tree', unfocusedIcon: 'tree-outline'},
+    { key: 'browse', title: 'Browse', focusedIcon: 'folder-search', unfocusedIcon: 'folder-search-outline' },
+    { key: 'profile', title: 'Profile', focusedIcon: 'account-circle', unfocusedIcon: 'account-circle-outline' },
+    { key: 'forms', title: 'Forms', focusedIcon: 'file-document-multiple', unfocusedIcon: 'file-document-multiple-outline' },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    music: MusicRoute,
-    albums: AlbumsRoute,
-    recents: RecentsRoute,
-    notifications: NotificationsRoute,
+    tree: MusicRoute,
+    browse: AlbumsRoute,
+    profile: RecentsRoute,
+    forms: NotificationsRoute,
   });
 
   return (
