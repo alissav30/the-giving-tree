@@ -4,12 +4,10 @@ import { Button, TextInput, Text, Modal, Portal, PaperProvider } from 'react-nat
 import { inputReducer, State } from '../utils';
 
 const Donate = () => {
-  const [selectedButton1, setSelectedButton1] = useState(1);
-  const [selectedButton2, setSelectedButton2] = useState(null);
-  const [selectedButton3, setSelectedButton3] = useState(3);
 
+  //handles one-time vs recurring
   const [isRecurringSelected, setIsRecurringSelected] = useState(true);
-
+  const [selectedButton1, setSelectedButton1] = useState(1);
   const handlePress1 = (buttonIndex1) => {
     setSelectedButton1(buttonIndex1);
     setIsRecurringSelected(buttonIndex1 === 1);
@@ -18,6 +16,8 @@ const Donate = () => {
     return selectedButton1 === buttonIndex1;
   };
 
+  // handles daily vs weekly vs monthly
+  const [selectedButton2, setSelectedButton2] = useState(null);
   const handlePress2 = (buttonIndex2) => {
     setSelectedButton2(buttonIndex2);
   };
@@ -25,13 +25,14 @@ const Donate = () => {
     return selectedButton2 === buttonIndex2;
   };
 
+  // handles $25 vs $50 vs $100
+  const [selectedButton3, setSelectedButton3] = useState(3);
   const handlePress3 = (buttonIndex3) => {
     setSelectedButton3(buttonIndex3);
   };
   const isButtonSelected3 = (buttonIndex3) => {
     return selectedButton3 === buttonIndex3;
   };
-
 
   // To get the Donation Description for the confirmation message  
   const getDonationDescription = () => {
@@ -71,11 +72,12 @@ const Donate = () => {
     }
   };
 
-  // Disable the amount buttons if there is text in the TextInput
+  // Disable the amount buttons if there's text in the TextInput
   const isButtonDisabled = () => {
     return outlinedText.trim() !== '';
   };
 
+  // Diable 'Give Now!' button if a dollar amount isn't specified
   const isDonateButtonDisabled = () => {
     return outlinedText.trim() === '' && selectedButton2 === null;
   };
@@ -128,15 +130,15 @@ const Donate = () => {
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal} >
           <Text variant="titleLarge">Confirm Your Donation</Text>
           <View style={styles.modalTextBox}>
-            <Text style={styles.modalText}>To: Ocean Alliance</Text>
-            <Text style={styles.modalText}>Amount:  {getAmountText()} </Text>
-            <Text style={styles.modalText}>Frequency: {getDonationDescription()}</Text>
+            <Text style={styles.smallMargin}>To: Ocean Alliance</Text>
+            <Text style={styles.smallMargin}>Amount:  {getAmountText()} </Text>
+            <Text style={styles.smallMargin}>Frequency: {getDonationDescription()}</Text>
           </View>
           <View style={styles.row}>
-          <Button mode="contained" style={styles.button}>
+          <Button mode="contained" style={styles.smallMargin}>
            CONFIRM
           </Button>
-          <Button mode="outlined" onPress={hideModal} style={[styles.button, { marginRight: 10 }]}>
+          <Button mode="outlined" onPress={hideModal} style={[styles.smallMargin, { marginRight: 10 }]}>
             CANCEL
           </Button>
           </View>
@@ -148,24 +150,25 @@ const Donate = () => {
       <Text variant="displayMedium" style={styles.input}>
         Ocean Alliance
       </Text>
-      {/* First row of buttons */}
+      {/* One-Time vs Recurring */}
       <View style={styles.row}>
         <Button
           mode={isButtonSelected1(0) ? 'contained' : 'outlined'}
           onPress={() => handlePress1(0)}
-          style={styles.button}
+          style={styles.smallMargin}
         >
           One-Time
         </Button>
         <Button
           mode={isButtonSelected1(1) ? 'contained' : 'outlined'}
           onPress={() => handlePress1(1)}
-          style={styles.button}
+          style={styles.smallMargin}
         >
           Recurring
         </Button>  
       </View>
 
+      {/* How often would you like to donate? */}
       {isRecurringSelected && (
           <>
              <Text variant="titleSmall">
@@ -175,21 +178,21 @@ const Donate = () => {
               <Button
                 mode={isButtonSelected3(3) ? 'contained' : 'outlined'}
                 onPress={() => handlePress3(3)}
-                style={styles.button}
+                style={styles.smallMargin}
               >
                 Daily
               </Button>
               <Button
                 mode={isButtonSelected3(4) ? 'contained' : 'outlined'}
                 onPress={() => handlePress3(4)}
-                style={styles.button}
+                style={styles.smallMargin}
               >
                 Weekly
               </Button>
               <Button
                 mode={isButtonSelected3(5) ? 'contained' : 'outlined'}
                 onPress={() => handlePress3(5)}
-                style={styles.button}
+                style={styles.smallMargin}
               >
                 Monthly
               </Button>
@@ -197,6 +200,7 @@ const Donate = () => {
           </>
         )}
 
+      {/* $25 vs $50 vs $100 */}
       <Text variant="titleSmall">
         Choose an amount:
       </Text>
@@ -204,7 +208,7 @@ const Donate = () => {
         <Button
           mode={isButtonSelected2(3) ? 'contained' : 'outlined'}
           onPress={() => handlePress2(3)}
-          style={styles.button}
+          style={styles.smallMargin}
           disabled={isButtonDisabled()}
         >
           $25
@@ -212,7 +216,7 @@ const Donate = () => {
         <Button
           mode={isButtonSelected2(4) ? 'contained' : 'outlined'}
           onPress={() => handlePress2(4)}
-          style={styles.button}
+          style={styles.smallMargin}
           disabled={isButtonDisabled()}
         >
           $50
@@ -220,13 +224,14 @@ const Donate = () => {
         <Button
           mode={isButtonSelected2(5) ? 'contained' : 'outlined'}
           onPress={() => handlePress2(5)}
-          style={styles.button}
+          style={styles.smallMargin}
           disabled={isButtonDisabled()}
         >
           $100
         </Button>
       </View>
 
+      {/* Custom amount to donate */}
       <TextInput
         mode="outlined"
         placeholder="enter custom amount"
@@ -253,7 +258,8 @@ const Donate = () => {
           )
         }
       />
-      
+
+      {/* Payment Method (currently static) */}
        <Text variant="titleSmall" style={styles.input}>
         Payment Method:
       </Text>
@@ -268,8 +274,9 @@ const Donate = () => {
           />
         }
         maxLength={10}
-
       />
+
+      {/* Give now button + donation summary */}
       <View style={styles.row}>
           <Button mode="contained" onPress={showModal} style={styles.bigbutton} disabled={isDonateButtonDisabled()}>
             <Text variant="titleLarge" style={styles.whiteText}>
@@ -301,9 +308,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
   },
-  button: {
-    margin: 5,
-  },
   modal: {
     backgroundColor: 'white',
     padding: 40,
@@ -320,7 +324,7 @@ const styles = StyleSheet.create({
   whiteText: {
     color: 'white',
   },
-  modalText: {
+  smallMargin: {
     margin: 5, 
   },
   modalTextBox: {
