@@ -212,9 +212,12 @@ const Donate = () => {
         mode="outlined"
         placeholder="enter custom amount"
         value={outlinedText}
-        onChangeText={(outlinedText) =>
-          inputActionHandler('outlinedText', outlinedText)
-        }
+        onChangeText={(text) => {
+          // Use a regular expression to allow only numeric input
+          const numericText = text.replace(/[^0-9]/g, '');
+          inputActionHandler('outlinedText', numericText);
+        }}
+        keyboardType="numeric"  // Set keyboardType to 'numeric'
         left={
           <TextInput.Icon
             icon="currency-usd"
@@ -222,7 +225,6 @@ const Donate = () => {
           />
         }
         maxLength={10}
-        
       />
       
        <Text variant="titleSmall" style={styles.input}>
