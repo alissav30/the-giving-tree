@@ -217,23 +217,31 @@ const Donate = () => {
       </View>
 
       <TextInput
-      mode="outlined"
-      placeholder="enter custom amount"
-      value={outlinedText}
-      onChangeText={(text) => {
-        // Use a regular expression to allow only numeric input
-        const numericText = text.replace(/[^0-9]/g, '');
-        inputActionHandler('outlinedText', numericText);
-      }}
-      keyboardType="numeric"  // Set keyboardType to 'numeric'
-      left={
-        <TextInput.Icon
-          icon="currency-usd"
-          color={outlineLeftIcon}  
-        />
-      }
-      maxLength={10}
-    />
+        mode="outlined"
+        placeholder="enter custom amount"
+        value={outlinedText}
+        onChangeText={(text) => {
+          // Use a regular expression to allow only numeric input
+          const numericText = text.replace(/[^0-9]/g, '');
+          inputActionHandler('outlinedText', numericText);
+        }}
+        keyboardType="numeric"  // Set keyboardType to 'numeric'
+        left={
+          <TextInput.Icon
+            icon="currency-usd"
+            color={outlineLeftIcon}  
+          />
+        }
+        maxLength={10}
+        right={
+          outlinedText.trim() !== '' && (
+            <TextInput.Icon
+              icon="close-circle"
+              onPress={() => inputActionHandler('outlinedText', '')}
+            />
+          )
+        }
+      />
       
        <Text variant="titleSmall" style={styles.input}>
         Payment Method:
