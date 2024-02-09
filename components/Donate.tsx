@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { Button, TextInput, Text, Modal, Portal, PaperProvider } from 'react-native-paper';
 import { inputReducer, State } from '../utils';
 
 const Donate = () => {
+  const [isConfirmationVisible, setConfirmationVisible] = useState(false);
 
-  //handles one-time vs recurring
+  // Used to display the big Thank You message
+  const handleConfirm = () => {
+    setConfirmationVisible(true);
+  };
+
+  //handles one-time vs recurring buttons
   const [isRecurringSelected, setIsRecurringSelected] = useState(true);
   const [selectedButton1, setSelectedButton1] = useState(1);
   const handlePress1 = (buttonIndex1) => {
@@ -16,7 +22,7 @@ const Donate = () => {
     return selectedButton1 === buttonIndex1;
   };
 
-  // handles daily vs weekly vs monthly
+  // handles daily vs weekly vs monthly buttons
   const [selectedButton2, setSelectedButton2] = useState(null);
   const handlePress2 = (buttonIndex2) => {
     setSelectedButton2(buttonIndex2);
@@ -25,7 +31,7 @@ const Donate = () => {
     return selectedButton2 === buttonIndex2;
   };
 
-  // handles $25 vs $50 vs $100
+  // handles $25 vs $50 vs $100 buttons
   const [selectedButton3, setSelectedButton3] = useState(3);
   const handlePress3 = (buttonIndex3) => {
     setSelectedButton3(buttonIndex3);
@@ -125,174 +131,183 @@ const Donate = () => {
 
   return (
     <PaperProvider>
-    <SafeAreaView style={styles.container}>
-      <Portal>
-        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal} >
-          <Text variant="titleLarge">Confirm Your Donation</Text>
-          <View style={styles.modalTextBox}>
-            <Text style={styles.smallMargin}>To: Ocean Alliance</Text>
-            <Text style={styles.smallMargin}>Amount:  {getAmountText()} </Text>
-            <Text style={styles.smallMargin}>Frequency: {getDonationDescription()}</Text>
-          </View>
-          <View style={styles.row}>
-          <Button mode="contained" style={styles.smallMargin}>
-           CONFIRM
-          </Button>
-          <Button mode="outlined" onPress={hideModal} style={[styles.smallMargin, { marginRight: 10 }]}>
-            CANCEL
-          </Button>
-          </View>
-        </Modal>
-      </Portal>
-      <Text variant="titleMedium">
-        Your Donation To
-      </Text>
-      <Text variant="displayMedium" style={styles.input}>
-        Ocean Alliance
-      </Text>
-      {/* One-Time vs Recurring */}
-      <View style={styles.row}>
-        <Button
-          mode={isButtonSelected1(0) ? 'contained' : 'outlined'}
-          onPress={() => handlePress1(0)}
-          style={styles.smallMargin}
-        >
-          One-Time
-        </Button>
-        <Button
-          mode={isButtonSelected1(1) ? 'contained' : 'outlined'}
-          onPress={() => handlePress1(1)}
-          style={styles.smallMargin}
-        >
-          Recurring
-        </Button>  
-      </View>
+      <SafeAreaView style={styles.container}>
 
-      {/* How often would you like to donate? */}
-      {isRecurringSelected && (
+        {isConfirmationVisible ? (
+          <View style={styles.tqcontainer}>
+          <Text style={styles.tqtext} variant="headlineSmall">
+              Thank you for your donation to
+          </Text>
+          <Text style={styles.tqtext}  variant="displayMedium">
+              Ocean Alliance
+          </Text>
+          <Image
+              source={require('../assets/ocean_alliance_logo.png')}  // Replace with the actual path to your image
+              style={styles.tqlogo}
+          />
+          <Button
+          mode="contained"
+          buttonColor="#599884"
+          onPress={() => alert('Navigate to the TREE')}
+          >
+              <Text style={styles.tqtext} variant="headlineSmall">
+                  VIEW YOUR TREE
+              </Text>
+          </Button>
+        </View>
+        ) : (
           <>
-             <Text variant="titleSmall">
-              How often would you like to donate?
+            <Portal>
+              <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
+                <Text variant="titleLarge">Confirm Your Donation</Text>
+                <View style={styles.modalTextBox}>
+                  <Text style={styles.smallMargin}>To: Ocean Alliance</Text>
+                  <Text style={styles.smallMargin}>Amount: {getAmountText()} </Text>
+                  <Text style={styles.smallMargin}>Frequency: {getDonationDescription()}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Button mode="contained" style={styles.smallMargin} onPress={handleConfirm}>
+                    CONFIRM
+                  </Button>
+                  <Button mode="outlined" onPress={hideModal} style={[styles.smallMargin, { marginRight: 10 }]}>
+                    CANCEL
+                  </Button>
+                </View>
+              </Modal>
+            </Portal>
+            <Text variant="titleMedium">Your Donation To</Text>
+            <Text variant="displayMedium" style={styles.input}>
+              Ocean Alliance
             </Text>
             <View style={styles.row}>
               <Button
-                mode={isButtonSelected3(3) ? 'contained' : 'outlined'}
-                onPress={() => handlePress3(3)}
+                mode={isButtonSelected1(0) ? 'contained' : 'outlined'}
+                onPress={() => handlePress1(0)}
                 style={styles.smallMargin}
               >
-                Daily
+                One-Time
               </Button>
               <Button
-                mode={isButtonSelected3(4) ? 'contained' : 'outlined'}
-                onPress={() => handlePress3(4)}
+                mode={isButtonSelected1(1) ? 'contained' : 'outlined'}
+                onPress={() => handlePress1(1)}
                 style={styles.smallMargin}
               >
-                Weekly
+                Recurring
+              </Button>
+            </View>
+            {isRecurringSelected && (
+              <>
+                <Text variant="titleSmall">How often would you like to donate?</Text>
+                <View style={styles.row}>
+                  <Button
+                    mode={isButtonSelected3(3) ? 'contained' : 'outlined'}
+                    onPress={() => handlePress3(3)}
+                    style={styles.smallMargin}
+                  >
+                    Daily
+                  </Button>
+                  <Button
+                    mode={isButtonSelected3(4) ? 'contained' : 'outlined'}
+                    onPress={() => handlePress3(4)}
+                    style={styles.smallMargin}
+                  >
+                    Weekly
+                  </Button>
+                  <Button
+                    mode={isButtonSelected3(5) ? 'contained' : 'outlined'}
+                    onPress={() => handlePress3(5)}
+                    style={styles.smallMargin}
+                  >
+                    Monthly
+                  </Button>
+                </View>
+              </>
+            )}
+            <Text variant="titleSmall">Choose an amount:</Text>
+            <View style={styles.row}>
+              <Button
+                mode={isButtonSelected2(3) ? 'contained' : 'outlined'}
+                onPress={() => handlePress2(3)}
+                style={styles.smallMargin}
+                disabled={isButtonDisabled()}
+              >
+                $25
               </Button>
               <Button
-                mode={isButtonSelected3(5) ? 'contained' : 'outlined'}
-                onPress={() => handlePress3(5)}
+                mode={isButtonSelected2(4) ? 'contained' : 'outlined'}
+                onPress={() => handlePress2(4)}
                 style={styles.smallMargin}
+                disabled={isButtonDisabled()}
               >
-                Monthly
+                $50
               </Button>
+              <Button
+                mode={isButtonSelected2(5) ? 'contained' : 'outlined'}
+                onPress={() => handlePress2(5)}
+                style={styles.smallMargin}
+                disabled={isButtonDisabled()}
+              >
+                $100
+              </Button>
+            </View>
+            <TextInput
+              mode="outlined"
+              placeholder="enter custom amount"
+              value={outlinedText}
+              onChangeText={(text) => {
+                const numericText = text.replace(/[^0-9]/g, '');
+                inputActionHandler('outlinedText', numericText);
+              }}
+              keyboardType="numeric"
+              left={
+                <TextInput.Icon
+                  icon="currency-usd"
+                  color={outlineLeftIcon}
+                />
+              }
+              maxLength={10}
+              right={
+                outlinedText.trim() !== '' && (
+                  <TextInput.Icon
+                    icon="close-circle"
+                    onPress={() => inputActionHandler('outlinedText', '')}
+                  />
+                )
+              }
+            />
+            <Text variant="titleSmall" style={styles.input}>
+              Payment Method:
+            </Text>
+            <TextInput
+              mode="outlined"
+              placeholder="**** **** **** 1234   01/26"
+              editable={false}
+              left={
+                <TextInput.Icon
+                  icon="credit-card-outline"
+                  color={outlineLeftIcon}
+                />
+              }
+              maxLength={10}
+            />
+            <View style={styles.row}>
+              <Button mode="contained" onPress={showModal} style={styles.bigbutton} disabled={isDonateButtonDisabled()}>
+                <Text variant="titleLarge" style={styles.whiteText}>
+                  GIVE NOW!
+                </Text>
+              </Button>
+              <View>
+                <Text variant="titleSmall">
+                  {getDonationDescription()}
+                </Text>
+                <Text variant="titleMedium">
+                  {getAmountText()}
+                </Text>
+              </View>
             </View>
           </>
         )}
-
-      {/* $25 vs $50 vs $100 */}
-      <Text variant="titleSmall">
-        Choose an amount:
-      </Text>
-      <View style={styles.row}>
-        <Button
-          mode={isButtonSelected2(3) ? 'contained' : 'outlined'}
-          onPress={() => handlePress2(3)}
-          style={styles.smallMargin}
-          disabled={isButtonDisabled()}
-        >
-          $25
-        </Button>
-        <Button
-          mode={isButtonSelected2(4) ? 'contained' : 'outlined'}
-          onPress={() => handlePress2(4)}
-          style={styles.smallMargin}
-          disabled={isButtonDisabled()}
-        >
-          $50
-        </Button>
-        <Button
-          mode={isButtonSelected2(5) ? 'contained' : 'outlined'}
-          onPress={() => handlePress2(5)}
-          style={styles.smallMargin}
-          disabled={isButtonDisabled()}
-        >
-          $100
-        </Button>
-      </View>
-
-      {/* Custom amount to donate */}
-      <TextInput
-        mode="outlined"
-        placeholder="enter custom amount"
-        value={outlinedText}
-        onChangeText={(text) => {
-          // Use a regular expression to allow only numeric input
-          const numericText = text.replace(/[^0-9]/g, '');
-          inputActionHandler('outlinedText', numericText);
-        }}
-        keyboardType="numeric"  // Set keyboardType to 'numeric'
-        left={
-          <TextInput.Icon
-            icon="currency-usd"
-            color={outlineLeftIcon}  
-          />
-        }
-        maxLength={10}
-        right={
-          outlinedText.trim() !== '' && (
-            <TextInput.Icon
-              icon="close-circle"
-              onPress={() => inputActionHandler('outlinedText', '')}
-            />
-          )
-        }
-      />
-
-      {/* Payment Method (currently static) */}
-       <Text variant="titleSmall" style={styles.input}>
-        Payment Method:
-      </Text>
-      <TextInput
-        mode="outlined"
-        placeholder="**** **** **** 1234   01/26"
-        editable={false}
-        left={
-          <TextInput.Icon
-            icon="credit-card-outline"
-            color={outlineLeftIcon}
-          />
-        }
-        maxLength={10}
-      />
-
-      {/* Give now button + donation summary */}
-      <View style={styles.row}>
-          <Button mode="contained" onPress={showModal} style={styles.bigbutton} disabled={isDonateButtonDisabled()}>
-            <Text variant="titleLarge" style={styles.whiteText}>
-              GIVE NOW!
-            </Text>
-          </Button>
-          <View>
-          <Text variant="titleSmall">
-            {getDonationDescription()}
-          </Text>
-          <Text variant="titleMedium">
-            {getAmountText()}
-          </Text>
-          </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
     </PaperProvider>
   );
 };
@@ -311,12 +326,12 @@ const styles = StyleSheet.create({
   modal: {
     backgroundColor: 'white',
     padding: 40,
-    alignSelf: 'center', // Center horizontally
-    justifyContent: 'center', // Center vertically
+    alignSelf: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   input: {
-    marginVertical: 10, // Add vertical margin to the TextInput
+    marginVertical: 10,
   },
   bigbutton: {
     margin: 10,
@@ -325,11 +340,34 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   smallMargin: {
-    margin: 5, 
+    margin: 5,
   },
   modalTextBox: {
-    padding: 16, 
+    padding: 16,
   },
+  confirmationContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Customize the styles for the confirmation view
+  },
+  tqcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#5A6F72',
+    padding: 28, // Adjust the padding to add space around the elements
+    width: '100%',
+  },
+  tqtext: {
+    color: 'white',
+    marginBottom: 10, // Add margin bottom to create space between text elements
+  },
+  tqlogo: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  }
 });
 
 export default Donate;
