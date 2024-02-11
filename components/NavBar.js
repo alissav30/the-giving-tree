@@ -24,7 +24,6 @@ const NavBar = () => {
     browse: Donate,
     profile: Profile,
     forms: NotificationsRoute,
-    profile: RecentsRoute,
     forms: Setting,
   });
 
