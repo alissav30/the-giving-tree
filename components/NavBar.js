@@ -3,6 +3,7 @@ import { BottomNavigation, Text } from 'react-native-paper';
 import Donate from './Donate.tsx'; 
 import Profile from './Profile.tsx';
 import Setting from './Setting.jsx';
+import Browse from './Browse.jsx';
 //import ThankYou from './ThankYou.tsx';
 
 const MusicRoute = () => <Text>Music</Text>;
