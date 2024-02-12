@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
 import Donate from './Donate.tsx'; 
 import Setting from './Setting.jsx';
+import Browse from './Browse.jsx';
 //import ThankYou from './ThankYou.tsx';
 
 const MusicRoute = () => <Text>Music</Text>;
@@ -21,7 +22,7 @@ const NavBar = () => {
 
   const renderScene = BottomNavigation.SceneMap({
     tree: MusicRoute,
-    browse: Donate,
+    browse: Browse,
     profile: RecentsRoute,
     forms: Setting,
   });
