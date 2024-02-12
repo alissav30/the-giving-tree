@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
 import Donate from './Donate.tsx'; 
+import Forms from './Forms.tsx';
 import Setting from './Setting.jsx';
 //import ThankYou from './ThankYou.tsx';
 
@@ -23,7 +24,7 @@ const NavBar = () => {
     tree: MusicRoute,
     browse: Donate,
     profile: RecentsRoute,
-    forms: Setting,
+    forms: Forms,
   });
 
   return (

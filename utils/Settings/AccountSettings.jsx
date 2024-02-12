@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Switch, StyleSheet } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
 
 
 const AccountSettings = () => {
