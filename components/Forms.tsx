@@ -1,35 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView, TouchableOpacity, Image, StatusBar } from 'react-native';
+import { View, StyleSheet, SafeAreaView, TouchableOpacity, Image, StatusBar, ScrollView } from 'react-native';
 import { Button, TextInput, Text, Modal, Portal, PaperProvider} from 'react-native-paper';
 import { inputReducer, State } from '../utils';
 import FormBox from '../utils/Forms/FormBox';
+import DonationTable from '../utils/Forms/DonationTable';
+import FilterButtons from '../utils/Forms/FilterButtons';
 
 
 const DonationHistory = () => (
     <View>
-      <Text>Donation History Content Goes Here</Text>
-      {/* Your content for donation history goes here */}
+        <FilterButtons />
+        <DonationTable />
     </View>
   );
   
   const PastTaxForms = () => (
-    <View style={styles.containerForm}>
-        <View style={styles.row}>
-            <FormBox year="2023" />
-            <FormBox year="2022" />
+    <ScrollView>
+        <View style={styles.containerForm}>
+            <View style={styles.row}>
+                <FormBox year="2023" />
+                <FormBox year="2022" />
+            </View>
+            <View style={styles.row}>
+                <FormBox year="2021" />
+                <FormBox year="2020" />
+            </View>
+            <View style={styles.row}>
+                <FormBox year="2019" />
+                <FormBox year="2018" />
+            </View>
+            <View style={styles.row}>
+                <FormBox year="2017" />
+                <FormBox year="2016" />
+            </View>
         </View>
-        <View style={styles.row}>
-            <FormBox year="2021" />
-            <FormBox year="2020" />
-        </View>
-        <View style={styles.row}>
-            <FormBox year="2019" />
-            <FormBox year="2018" />
-        </View>
-    </View>
+    </ScrollView>
   );
-
-
 
 const Forms = () => {
 
