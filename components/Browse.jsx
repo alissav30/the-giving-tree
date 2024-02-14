@@ -82,7 +82,7 @@ const Browse = ({ navigation }) => {
                         <Card.Content>
                             <Title>{org.name}</Title>
                         </Card.Content>
-                        <Card.Cover source={org.icon} />
+                        <Card.Cover source={org.icon} style={styles.orgImage} resizeMode="contain" />
                     </Card>
                 ))}
             </View>
@@ -131,6 +131,11 @@ const styles = StyleSheet.create({
     },
     orgCard: {
         width: '30%',
+    },
+    orgImage: {
+        width: '100%', // Ensure the image width matches the card width
+        //height: 100, // Adjust the height as needed
+        // You can also add resizeMode here if needed, but it's set to "contain" in the Card.Cover props
     },
     paginationContainer: {
         marginTop: -20, // Adjust as necessary

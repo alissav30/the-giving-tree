@@ -8,7 +8,7 @@ const OrgsByCause = ({ route, navigation }) => {
     const [activeFilter, setActiveFilter] = useState('');
 
     const organizations = Array.from({ length: 10 }, (_, index) => ({
-        id: index,
+        id: index + 1,
         name: `Organization ${index + 1}`,
         mission: 'This is a filler mission statement for the organization.',
     }));
