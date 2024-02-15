@@ -1,29 +1,49 @@
 // SquareTextBox.js
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { IconButton } from 'react-native-paper';
 import TurboTax from './TurboTax';
+import { WebView } from "react-native-webview";
 
-const FormBox = ({ year }) => {
+import { StackNavigationProp } from '@react-navigation/stack';
+import FormStackNavigator from '../../components/FormStackNavigator';
+
+
+// type FormBoxScreenNavigationProp = StackNavigationProp<FormStackNavigator, 'FormMain'>;
+
+
+
+const FormBox = ({ year, navigation }) => {
     // const navigation = useNavigation();
 
-    // const navigateToPage = () => {
-    //     // Replace 'YourPage' with the name of the screen you want to navigate to
-    //     navigation.navigate('TurboTax');
-    // };
+    const handleDownload = () => {
+        const source = require('../../assets/faketaxform.pdf'); 
+        return (
+            <View style={styles.pdfcontainer}>
+                <WebView
+                    source={source}
+                    style={styles.pdf}/>
+            </View>
+        )
+      };
+
+    const navigateToTurboTax = ({navigation}) => {
+        navigation.navigate('TurboTax');
+    };
+    
 
 
   return (
     <View style={styles.container}>
       <Text style={styles.yearText}>{year}</Text>
       <View style={styles.iconContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("TurbTox")}>
             <IconButton
                 icon="download"
                 iconColor="#599884"
                 size={30}
-                onPress={() => console.log('Pressed')}
+                // onPress={navigation.navigate("TurboTax")}
                 />
         </TouchableOpacity>
         <TouchableOpacity>
@@ -31,7 +51,7 @@ const FormBox = ({ year }) => {
                     icon="square-edit-outline"
                     iconColor="#599884"
                     size={30}
-                    onPress={() => console.log('Pressed')}
+                    onPress={() => handleDownload()}
             />
         </TouchableOpacity>
       </View>
@@ -60,8 +80,18 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     bottom: 0,
     // marginHorizontal: -50
-
   },
+  pdfcontainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 25,
+},
+  pdf: {
+    flex:1,
+    width:Dimensions.get('window').width,
+    height:Dimensions.get('window').height,
+}
 });
 
 export default FormBox;
