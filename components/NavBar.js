@@ -29,6 +29,9 @@ const NavBar = () => {
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
+      barStyle={{ backgroundColor: '#ddebe7' }}
+      style={{ backgroundColor: '#ddebe7' }}
+      theme={{colors: {secondaryContainer: '#b8d5cc'}}}
     />
   );
 };
