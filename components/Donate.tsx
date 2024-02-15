@@ -185,14 +185,14 @@ const Donate = ( { navigation } ) => {
               <Button
                 mode={isButtonSelected1(0) ? 'contained' : 'outlined'}
                 onPress={() => handlePress1(0)}
-                style={styles.smallMargin}
+                style={styles.button2}
               >
                 One-Time
               </Button>
               <Button
                 mode={isButtonSelected1(1) ? 'contained' : 'outlined'}
                 onPress={() => handlePress1(1)}
-                style={styles.smallMargin}
+                style={styles.button2}
               >
                 Recurring
               </Button>
@@ -204,21 +204,21 @@ const Donate = ( { navigation } ) => {
                   <Button
                     mode={isButtonSelected3(3) ? 'contained' : 'outlined'}
                     onPress={() => handlePress3(3)}
-                    style={styles.smallMargin}
+                    style={styles.button}
                   >
                     Daily
                   </Button>
                   <Button
                     mode={isButtonSelected3(4) ? 'contained' : 'outlined'}
                     onPress={() => handlePress3(4)}
-                    style={styles.smallMargin}
+                    style={styles.button}
                   >
                     Weekly
                   </Button>
                   <Button
                     mode={isButtonSelected3(5) ? 'contained' : 'outlined'}
                     onPress={() => handlePress3(5)}
-                    style={styles.smallMargin}
+                    style={styles.button}
                   >
                     Monthly
                   </Button>
@@ -230,7 +230,7 @@ const Donate = ( { navigation } ) => {
               <Button
                 mode={isButtonSelected2(3) ? 'contained' : 'outlined'}
                 onPress={() => handlePress2(3)}
-                style={styles.smallMargin}
+                style={styles.button}
                 disabled={isButtonDisabled()}
               >
                 $25
@@ -238,7 +238,7 @@ const Donate = ( { navigation } ) => {
               <Button
                 mode={isButtonSelected2(4) ? 'contained' : 'outlined'}
                 onPress={() => handlePress2(4)}
-                style={styles.smallMargin}
+                style={styles.button}
                 disabled={isButtonDisabled()}
               >
                 $50
@@ -246,12 +246,13 @@ const Donate = ( { navigation } ) => {
               <Button
                 mode={isButtonSelected2(5) ? 'contained' : 'outlined'}
                 onPress={() => handlePress2(5)}
-                style={styles.smallMargin}
+                style={styles.button}
                 disabled={isButtonDisabled()}
               >
                 $100
               </Button>
             </View>
+            <View style={styles.wide}>
             <TextInput
               mode="outlined"
               placeholder="enter custom amount"
@@ -277,22 +278,25 @@ const Donate = ( { navigation } ) => {
                 )
               }
             />
+            </View>
             <Text variant="titleSmall" style={styles.input}>
               Payment Method:
             </Text>
-            <TextInput
-              mode="outlined"
-              placeholder="**** **** **** 1234   01/26"
-              editable={false}
-              left={
-                <TextInput.Icon
-                  icon="credit-card-outline"
-                  color={outlineLeftIcon}
-                />
-              }
-              maxLength={10}
-            />
-            <View style={styles.row}>
+            <View style={styles.wide}>
+              <TextInput
+                mode="outlined"
+                placeholder="**** **** **** 1234   01/26"
+                editable={false}
+                left={
+                  <TextInput.Icon
+                    icon="credit-card-outline"
+                    color={outlineLeftIcon}
+                  />
+                }
+                maxLength={10}
+              />
+            </View>
+            <View style={styles.bottomrow}>
               <Button mode="contained" onPress={showModal} style={styles.bigbutton} disabled={isDonateButtonDisabled()}>
                 <Text variant="titleLarge" style={styles.whiteText}>
                   GIVE NOW!
@@ -317,7 +321,8 @@ const Donate = ( { navigation } ) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'left',
+    margin: 40,
   },
   backButton: {
     marginBottom: 20,
@@ -332,6 +337,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
+    width: '100%'
+  },
+  bottomrow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+    width: '100%',
   },
   modal: {
     backgroundColor: 'white',
@@ -345,12 +357,24 @@ const styles = StyleSheet.create({
   },
   bigbutton: {
     margin: 10,
+    height: 54,
+    justifyContent: 'center',
   },
   whiteText: {
     color: 'white',
+    
+
   },
   smallMargin: {
-    margin: 5,
+    margin: 4,
+  },
+  button: {
+    margin: 4,
+    width: '33%'
+  },
+  button2: {
+    margin: 4,
+    width: '50%',
   },
   modalTextBox: {
     padding: 16,
@@ -377,6 +401,9 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginBottom: 20,
+  },
+  wide: {
+    width: '100%'
   }
 });
 
