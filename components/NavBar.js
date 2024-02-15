@@ -3,12 +3,9 @@ import { BottomNavigation, Text } from 'react-native-paper';
 import Donate from './Donate.tsx'; 
 import Profile from './Profile.tsx';
 import Setting from './Setting.jsx';
-import Browse from './Browse.jsx';
-//import ThankYou from './ThankYou.tsx';
+import BrowseStackNavigator from './BrowseStackNavigator'; // Import the stack navigator
 
 const MusicRoute = () => <Text>Music</Text>;
-
-
 const NotificationsRoute = () => <Text>Notifications</Text>;
 
 const NavBar = () => {
@@ -22,10 +19,9 @@ const NavBar = () => {
 
   const renderScene = BottomNavigation.SceneMap({
     tree: MusicRoute,
-    browse: Donate,
+    browse: BrowseStackNavigator, // Use the stack navigator here
     profile: Profile,
-    forms: NotificationsRoute,
-    forms: Setting,
+    forms: Setting, // Ensure each key is unique; previously, 'forms' was listed twice
   });
 
   return (

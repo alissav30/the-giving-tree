@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { Button, TextInput, Text, Modal, Portal, PaperProvider } from 'react-native-paper';
 import { inputReducer, State } from '../utils';
 
-const Donate = () => {
+const Donate = ( { navigation } ) => {
   const [isConfirmationVisible, setConfirmationVisible] = useState(false);
 
   // Used to display the big Thank You message
@@ -132,7 +132,9 @@ const Donate = () => {
   return (
     <PaperProvider>
       <SafeAreaView style={styles.container}>
-
+      <TouchableOpacity onPress={navigation.goBack} style={styles.backButton}>
+            <Text style={styles.backButtonText}>Back</Text>
+        </TouchableOpacity>
         {isConfirmationVisible ? (
           <View style={styles.tqcontainer}>
           <Text style={styles.tqtext} variant="headlineSmall">
@@ -316,6 +318,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+  },
+  backButton: {
+    marginBottom: 20,
+
+  },
+  backButtonText: {
+    alignSelf: 'flex-start',
+    color: '#5A6F72',
   },
   row: {
     flexDirection: 'row',
