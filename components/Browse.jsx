@@ -8,9 +8,9 @@ const Browse = () => {
     const [activeSlide, setActiveSlide] = useState(0);
     const carouselRef = useRef(null);
     const carouselItems = [
-        require('./assets/bail_project_ad.png'),
-        require('./assets/dreamcatchers_ad.png'),
-        require('./assets/stand_ad.png')
+        require('../assets/bail_project_ad.png'),
+        require('../assets/dreamcatchers_ad.png'),
+        require('../assets/stand_ad.png')
     ];
 
     const renderCarouselItem = ({item, index}) => {
