@@ -1,0 +1,36 @@
+{
+    "organizations": [
+      {
+        "organization_name": "",
+        "cause": "",
+        "organization_mission_statement": "",
+        "logo_url": "",
+        "other_pictures": ["","",""],
+        "financial_need": 0,
+        "dollar_impact": 0,
+        "local_contribution": 0
+      },
+      {
+        "organization_name": "",
+        "cause": "",
+        "organization_mission_statement": "",
+        "logo_url": "",
+        "other_pictures": ["","",""],
+        "financial_need": 0,
+        "dollar_impact": 0,
+        "local_contribution": 0
+      },
+      {
+        "organization_name": "",
+        "cause": "",
+        "organization_mission_statement": "",
+        "logo_url": "",
+        "other_pictures": ["","",""],
+        "financial_need": 0,
+        "dollar_impact": 0,
+        "local_contribution": 0
+      }
+    ]
+  }
+  
+  

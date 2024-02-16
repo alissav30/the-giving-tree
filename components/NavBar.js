@@ -21,7 +21,7 @@ const NavBar = () => {
     tree: MusicRoute,
     browse: BrowseStackNavigator, // Use the stack navigator here
     profile: Profile,
-    forms: Setting, // Ensure each key is unique; previously, 'forms' was listed twice
+    forms: Setting,
   });
 
   return (
