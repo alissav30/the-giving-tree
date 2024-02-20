@@ -4,7 +4,8 @@ import Donate from './Donate.tsx';
 import Profile from './Profile.tsx';
 import Setting from './Setting.jsx';
 import BrowseStackNavigator from './BrowseStackNavigator'; // Import the stack navigator
-
+import FormsStackNavigator2 from './FormsStackNavigator2.js';
+import FormStackNavigator from './FormStackNavigator.js';
 const MusicRoute = () => <Text>Music</Text>;
 const NotificationsRoute = () => <Text>Notifications</Text>;
 
@@ -21,7 +22,7 @@ const NavBar = () => {
     tree: MusicRoute,
     browse: BrowseStackNavigator, // Use the stack navigator here
     profile: Profile,
-    forms: Setting,
+    forms: FormsStackNavigator2,
   });
 
   return (
