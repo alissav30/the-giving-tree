@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Image, StyleSheet, Text, Dimensions } from 'react-native';
 import { Searchbar, Button, Card, Title } from 'react-native-paper';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import organizationsData from '../organizations.json'; 
+import app from '../firebase.js'; // Adjust the path as necessary
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 const Browse = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeSlide, setActiveSlide] = useState(0); // State to keep track of the active slide
+    const [recommendedOrgs, setRecommendedOrgs] = useState([]);
 
     const carouselItems = [
         require('../assets/bail_project_ad.png'),
@@ -13,17 +17,45 @@ const Browse = ({ navigation }) => {
         require('../assets/stand_ad.png')
     ];
 
-    const categories = ["Disease", "Animals", "Women's Rights", "Disaster Relief", "Housing", "Education", "Hunger Relief", "Other"];
-
-    const navigateToOrgsByCause = (cause) => {
-        navigation.navigate('OrgsByCause', { cause });
-    };
-
-    const recommendedOrgs = [
-        { id: 1, name: 'Org 1', icon: require('../assets/aspca_icon.png') },
-        { id: 2, name: 'Org 2', icon: require('../assets/aspca_icon.png') },
-        { id: 3, name: 'Org 3', icon: require('../assets/aspca_icon.png') },
+    const categories = [
+        ["Health", "health"],
+        ["Animals", "Animals"],
+        ["Human Services", "human_services"],
+        ["Housing", "housing"],
+        ["Natural Disaster Relief", "natural_disaster_relief"],
+        ["Hunger Relief", "hunger_relief"],
+        ["Education", "education"],
+        ["Global Conflict", "global_conflict"],
+        ["Current", "current"],
+        ["Other", "other"]
     ];
+
+    useEffect(() => {
+        const storage = getStorage(app);
+        const fetchImageUrls = async () => {
+            const recommendedOrgKeys = Object.keys(organizationsData.organizations).slice(0, 3); // Just an example, adjust as needed
+            const orgsWithImages = await Promise.all(recommendedOrgKeys.map(async (key) => {
+                const org = organizationsData.organizations[key];
+                const imageRef = ref(storage, `${org.logo_url}`);
+                const imageUrl = await getDownloadURL(imageRef).catch((error) => {
+                    console.error('Error fetching image URL:', error);
+                    return ''; // Return empty string or a default image URL in case of error
+                });
+                return {
+                    ...org,
+                    id: key,
+                    imageUrl
+                };
+            }));
+            setRecommendedOrgs(orgsWithImages);
+        };
+
+        fetchImageUrls();
+    }, []);
+
+    const navigateToOrgsByCause = (category) => {
+        navigation.navigate('OrgsByCause', { cause_tuple: category });
+    };
 
     const renderCarouselItem = ({ item }) => (
         <View style={styles.carouselItem}>
@@ -70,7 +102,7 @@ const Browse = ({ navigation }) => {
                         style={styles.filterButton}
                         onPress={() => navigateToOrgsByCause(category)}
                     >
-                        {category}
+                        {category[0]}
                     </Button>
                 ))}
             </ScrollView>
@@ -80,9 +112,9 @@ const Browse = ({ navigation }) => {
                 {recommendedOrgs.map((org) => (
                     <Card key={org.id} style={styles.orgCard}>
                         <Card.Content>
-                            <Title>{org.name}</Title>
+                            <Title style={styles.orgTitle}>{org.organization_name}</Title>
                         </Card.Content>
-                        <Card.Cover source={org.icon} style={styles.orgImage} resizeMode="contain" />
+                        <Card.Cover source={{ uri: org.imageUrl }} style={styles.orgImage} resizeMode="contain" />
                     </Card>
                 ))}
             </View>
@@ -94,6 +126,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 50,
+    },
+    orgTitle: {
+        fontSize: 17,
     },
     searchBar: {
         marginHorizontal: 10,

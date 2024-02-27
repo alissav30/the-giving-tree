@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import theme from './themes.js'; 
 import { PaperProvider } from 'react-native-paper';
 
+
 export default function App() {
   return (
     <PaperProvider theme={theme}>
