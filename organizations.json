@@ -58,7 +58,7 @@
         "organization_mission_statement": "The mission of The Trevor Project is to end suicide among gay, lesbian, bisexual, transgender and questioning young people.",
         "logo_url": "trevorproj_logo.png",
         "website_url": "https://www.thetrevorproject.org/",
-        "other_pictures": ["trevorproj_1.jpeg","trevorproj_2.jpeg","trevorproj_3.jpeg"],
+        "other_pictures": ["trevorproj_1.jpeg","trevorproj_2.jpeg","trevor_proj_3.jpeg"],
         "financial_need": 1,
         "dollar_impact": 1,
         "local_contribution": 1,
@@ -248,6 +248,7 @@
         "paypal_url": "https://www.paypal.com/fundraiser/charity/2357942"
     },
     "TreeOfLifeHealthcare": {
+        "organization_name": "Tree of Life Healthcare",
         "causes": ["health"],
         "organization_mission_statement": "Tree Of Life Healthcare is a non-profit medical and eye clinic in Columbus, Georgia. Our clinic is designed to serve the of patients who have no health insurance and the under-served. Our Mission is to provide compassionate preventive health care through Screenings, Education and Primary Medical Care, to individuals and families.",
         "logo_url": "treeoflife_logo.png",
@@ -299,19 +300,7 @@
         "most in need": 70,
         "paypal_url": "https://www.paypal.com/fundraiser/charity/4514759"
     },
-    "SmileLiberiaInternationalInc2": {
-        "organization_name": "Smile Liberia International, Inc.",
-        "causes": ["education"],
-        "organization_mission_statement": "Bringing smiles to children in the poorest communities of Liberia by providing them access to quality education.",
-        "logo_url": "liberia_logo.jpeg",
-        "website_url": "https://smileliberia.org/",
-        "other_pictures": ["liberia_1.jpeg","liberia_2.jpeg","liberia_3.jpeg"],
-        "financial_need": 2,
-        "dollar_impact": 4,
-        "local_contribution": 4,
-        "most in need": 88,
-        "paypal_url": "https://www.paypal.com/fundraiser/charity/2718567"
-    },
+    
     "PunyaFoundationUS": {
         "organization_name": "Punya Foundation US",
         "causes": ["education"],
@@ -396,7 +385,7 @@
         "organization_mission_statement": "The mission of the National Wildlife Federation® is to educate, inspire, and assist individuals and organizations of diverse cultures to conserve wildlife and other natural resources and to protect the Earth's environment in order to achieve a peaceful, equitable, and sustainable future.",
         "logo_url": "nwf_logo.jpeg",
         "website_url": "https://www.nwf.org/en/",
-        "other_pictures": ["nwf_1.jpeg","nwf_2.jpeg","nwf_3.jpeg"],
+        "other_pictures": ["nwf_1.jpeg","nwf_2.png","nwf_3.jpeg"],
         "financial_need": 0,
         "dollar_impact": 0,
         "local_contribution": 0,
@@ -552,7 +541,7 @@
         "organization_mission_statement": "Team Rubicon serves communities by mobilizing veterans to continue their service, leveraging their skills and experience to help people prepare, respond, and recover from disasters and humanitarian crises.",
         "logo_url": "teamrubicon_logo.png",
         "website_url": "https://teamrubiconusa.org/", 
-        "other_pictures": ["teamrubicon_1.jpeg" ,"teamrubicon_2.jpeg" ,"teamrubicon_3.jpeg" ],
+        "other_pictures": ["teamrubicon_1.jpeg" ,"teamrubicon_2.jpeg" ,"teamrubicon_3.jpg" ],
         "financial_need": 0,
         "dollar_impact": 0,
         "local_contribution": 0,
