@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, SafeAreaView, Image, ScrollView } from "react-native";
+import { View, StyleSheet, SafeAreaView, Image, ScrollView, TouchableOpacity } from "react-native";
 import {
   Button,
   TextInput,
@@ -13,7 +13,12 @@ import {
   Divider,
 } from "react-native-paper";
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
+
+  const navigateToSettingPage = () => {
+    // Your click event handling logic goes here
+    navigation.navigate('SettingMain');
+  };
 
   const [items, setItems] = React.useState([
     {
@@ -65,10 +70,24 @@ const Profile = () => {
     <SafeAreaView>
         <View style={styles.infoContainer}>
           <View style={styles.infoPfpBackground}></View>
+          
+              {/** Settings Icon */}
+              <View style={styles.containerSetting}>
+                <TouchableOpacity onPress={navigateToSettingPage}>
+                <Image
+                  style={styles.imageSetting}
+                  source={require('../assets/gear.png')} // Replace with the actual path to your image
+               
+                />
+                </TouchableOpacity>
+              </View>
+
           <Avatar.Image
             style={styles.infoPfp}
             size={80}
-            source={require("../assets/default_pfp.png")}
+            // source={require("../assets/default_pfp.png")}
+            source={require("../assets/profile.jpg")}
+
           />
         </View>
         <Text style={styles.infoUsername} variant="titleMedium">
@@ -212,6 +231,17 @@ const styles = StyleSheet.create({
   divider: {
     width: '100%',
     margin: 20,
+  },
+  containerSetting: {
+    position: 'absolute', 
+    top: 20,
+    right: 20
+
+  },
+  imageSetting: {
+    width: 40,
+    height: 40,
+    
   }
 });
 

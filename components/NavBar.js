@@ -6,6 +6,7 @@ import Setting from './Setting.jsx';
 import Trees from './Trees.jsx';
 import BrowseStackNavigator from './BrowseStackNavigator'; // Import the stack navigator
 import FormsStackNavigator2 from './FormsStackNavigator2.js';
+import ProfileStackNavigator from './ProfileStackNavigator.js';
 import FormStackNavigator from './FormStackNavigator.js';
 const MusicRoute = () => <Text>Music</Text>;
 const NotificationsRoute = () => <Text>Notifications</Text>;
@@ -22,7 +23,7 @@ const NavBar = () => {
   const renderScene = BottomNavigation.SceneMap({
     trees: Trees,
     browse: BrowseStackNavigator, // Use the stack navigator here
-    profile: Profile,
+    profile: ProfileStackNavigator,
     forms: FormsStackNavigator2,
   });
 

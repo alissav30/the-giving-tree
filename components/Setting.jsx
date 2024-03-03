@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView, Image, StatusBar } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Image, StatusBar, TouchableOpacity } from 'react-native';
 import { Button, TextInput, Text, Modal, Portal, PaperProvider, App } from 'react-native-paper';
 import { inputReducer, State } from '../utils';
 import SettingAppBar from '../utils/Settings/SettingAppBar';
@@ -8,10 +8,7 @@ import AccountSettings from '../utils/Settings/AccountSettings';
 import More from '../utils/Settings/More';
 
 
-
-
-
-const Setting = () => {
+const Setting = ({navigation}) => {
     //define user 
     const user = {
         // profileImage: require('../assets/ocean_alliance_logo.png'), 
@@ -25,6 +22,9 @@ const Setting = () => {
             <SafeAreaView style={styles.container}>
                 <PaperProvider>
                     <View style={styles.menuContainer}>
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                            <Text style={styles.backButtonText}>Back</Text>
+                        </TouchableOpacity>
                         {/* Profile picture and name */}
                         <UserProfile profileImage={user.profileImage} name={user.name} />
                         <View style={styles.border}/>
@@ -92,7 +92,17 @@ const styles = StyleSheet.create ({
     headerText: {
         color: '#F9FFFD',
         textAlign: 'center'
-    }
+    },
+    backButton: {
+        marginBottom: 0,
+        left: -40,
+        top: -130,
+        position: 'relative'
+    },
+    backButtonText: {
+        color: 'white',
+        fontSize: 18,
+    },
 });
 
 export default Setting; 
