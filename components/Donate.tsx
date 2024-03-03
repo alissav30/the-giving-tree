@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { Button, TextInput, Text, Modal, Portal, PaperProvider } from 'react-native-paper';
 import { inputReducer, State } from '../utils';
+import theme from '../themes';
 
 const Donate = ( { navigation } ) => {
   const [isConfirmationVisible, setConfirmationVisible] = useState(false);
@@ -130,7 +131,7 @@ const Donate = ( { navigation } ) => {
     const hideModal = () => setVisible(false);
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={theme}>
       <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={navigation.goBack} style={styles.backButton}>
             <Text style={styles.backButtonText}>Back</Text>
