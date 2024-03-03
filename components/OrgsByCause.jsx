@@ -63,10 +63,10 @@ const OrgsByCause = ({ route, navigation }) => {
                 {filteredOrgs.map((org) => (
                     <Card key={org.key} style={styles.orgContainer}>
                         <View style={styles.cardContent}>
-                            <Card.Cover source={{ uri: org.imageUrl }} style={styles.icon} />
+                            <Card.Cover source={{ uri: org.imageUrl }} style={styles.icon} resizeMode="contain"/>
                             <View style={styles.textContainer}>
                                 <Title style={styles.orgTitle}>{org.organization_name}</Title>
-                                <Paragraph style={styles.mission}>{org.organization_mission_statement}</Paragraph>
+                                <Paragraph numberOfLines={4} ellipsizeMode="tail" style={styles.mission}>{org.organization_mission_statement}</Paragraph>
                                 <Button
                                     mode="outlined"
                                     onPress={() => navigation.navigate('OrgInfo', { orgKey: org.key })}
@@ -147,10 +147,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
+        margin: 10,
     },
     icon: {
-        width: 80,
-        height: 80,
+        width: 100,
+        height: 100,
         marginRight: 16,
     },
     textContainer: {
