@@ -200,7 +200,7 @@ const Donate = ({ navigation, route }) => {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <PaperProvider>
+        <PaperProvider theme={theme}>
           <SafeAreaView style={styles.container}>
             <TouchableOpacity onPress={navigation.goBack} style={styles.backButton}>
               <Text style={styles.backButtonText}>Back</Text>
