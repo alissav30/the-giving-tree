@@ -50,8 +50,8 @@ const OrgInfo = ({ navigation, route }) => {
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                 <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
-            <Title style={styles.title}>{orgInfo.organization_name}</Title>
             <Image source={orgInfo.logo} style={styles.logo} resizeMode="contain" />
+            <Title style={styles.title}>{orgInfo.organization_name}</Title>
             <Paragraph style={styles.mission}>{orgInfo.organization_mission_statement}</Paragraph>
             <Button
                 mode="outlined"
@@ -113,8 +113,9 @@ const styles = StyleSheet.create({
     },
     mission: {
         fontSize: 16,
-        textAlign: 'center',
+        textAlign: 'left',
         marginVertical: 10,
+        marginLeft: '5%',
     },
     logo: {
         width: 150,
@@ -124,6 +125,8 @@ const styles = StyleSheet.create({
     },
     visitButton: {
         marginVertical: 10,
+        width: '50%',
+        marginLeft: '5%',
     },
     donateButton: {
         backgroundColor: '#007bff',
