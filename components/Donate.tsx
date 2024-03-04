@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, SafeAreaView, Image, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Button, TextInput, Text, Modal, Portal, PaperProvider } from 'react-native-paper';
 import { inputReducer, State } from '../utils';
-import { database } from '../firebase.js';
-import { ref, set, push } from "firebase/database";
-import organizationsData from '../organizations.json';
-import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
-import { app } from '../firebase.js'; 
+import theme from '../themes';
 
 const Donate = ({ navigation, route }) => {
     const { orgId } = route.params; // Receive orgId from navigation
@@ -190,37 +186,34 @@ const Donate = ({ navigation, route }) => {
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
 
-    return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <PaperProvider>
-          <SafeAreaView style={styles.container}>
-            <TouchableOpacity onPress={navigation.goBack} style={styles.backButton}>
-              <Text style={styles.backButtonText}>Back</Text>
-            </TouchableOpacity>
-            {isConfirmationVisible ? (
-              <View style={styles.tqcontainer}>
-                <Text style={[styles.tqtext, { textAlign: 'left', marginRight: 20 }]} variant="headlineSmall">
-                    Thank you for your donation to
-                </Text>
-                <Text style={[styles.tqtext, { textAlign: 'left' }]} variant="displaySmall">
-                    {orgName}
-                </Text>    
-                {/* Logo Image */}
-                <Image
-                  source={{ uri: logoUrl }} // Use the fetched logo URL
-                  style={styles.tqlogo}
-                />
-                <Button
-                  mode="contained"
-                  buttonColor="#599884" 
-                  style={{marginTop: 20}}
-                  onPress={() => alert('Navigate to the TREE')}
-                >
-                  <Text style={styles.tqtext} variant="headlineSmall">
-                    VIEW YOUR TREE
-                  </Text>
-                </Button>
-              </View>
+  return (
+    <PaperProvider theme={theme}>
+      <SafeAreaView style={styles.container}>
+      <TouchableOpacity onPress={navigation.goBack} style={styles.backButton}>
+            <Text style={styles.backButtonText}>Back</Text>
+        </TouchableOpacity>
+        {isConfirmationVisible ? (
+          <View style={styles.tqcontainer}>
+          <Text style={styles.tqtext} variant="headlineSmall">
+              Thank you for your donation to
+          </Text>
+          <Text style={styles.tqtext}  variant="displayMedium">
+              Ocean Alliance
+          </Text>
+          <Image
+              source={require('../assets/ocean_alliance_logo.png')}  // Replace with the actual path to your image
+              style={styles.tqlogo}
+          />
+          <Button
+          mode="contained"
+          buttonColor="#599884"
+          onPress={() => alert('Navigate to the TREE')}
+          >
+              <Text style={styles.tqtext} variant="headlineSmall">
+                  VIEW YOUR TREE
+              </Text>
+          </Button>
+        </View>
         ) : (
           <>
             <Portal>
