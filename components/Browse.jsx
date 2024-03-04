@@ -109,14 +109,16 @@ const Browse = ({ navigation }) => {
 
             <Text style={styles.sectionTitle}>Recommended Organizations</Text>
             <View style={styles.recommendedOrgsContainer}>
-                {recommendedOrgs.map((org) => (
-                    <Card key={org.id} style={styles.orgCard}>
-                        <Card.Content>
-                            <Title style={styles.orgTitle}>{org.organization_name}</Title>
-                        </Card.Content>
-                        <Card.Cover source={{ uri: org.imageUrl }} style={styles.orgImage} resizeMode="contain" />
-                    </Card>
-                ))}
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    {recommendedOrgs.map((org) => (
+                        <Card key={org.id} style={styles.orgCard}>
+                            <Card.Content>
+                                <Title numberOfLines={1} ellipsizeMode="tail" style={styles.orgTitle}>{org.organization_name}</Title>
+                            </Card.Content>
+                            <Card.Cover source={{ uri: org.imageUrl }} style={styles.orgImage} resizeMode="contain" />
+                        </Card>
+                    ))}
+                </ScrollView>
             </View>
         </ScrollView>
     );
@@ -128,7 +130,9 @@ const styles = StyleSheet.create({
         paddingTop: 50,
     },
     orgTitle: {
-        fontSize: 17,
+        fontSize: 15,
+        paddingVertical: 15,
+        fontWeight: "bold",
     },
     searchBar: {
         marginHorizontal: 10,
@@ -166,6 +170,7 @@ const styles = StyleSheet.create({
     },
     orgCard: {
         width: '30%',
+        margin: 10,
     },
     orgImage: {
         width: '100%', // Ensure the image width matches the card width
