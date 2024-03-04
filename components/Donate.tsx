@@ -8,7 +8,7 @@ import organizationsData from '../organizations.json';
 import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
 import { app } from '../firebase.js'; 
 import { useNavigationContext } from '../NavigationContext';
-
+import theme from '../themes';
 
 const Donate = ({ navigation, route }) => {
     const { setCurrentTab } = useNavigationContext();
