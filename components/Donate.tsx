@@ -7,11 +7,19 @@ import { ref, set, push } from "firebase/database";
 import organizationsData from '../organizations.json';
 import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
 import { app } from '../firebase.js'; 
+import { useNavigationContext } from '../NavigationContext';
+
 
 const Donate = ({ navigation, route }) => {
+    const { setCurrentTab } = useNavigationContext();
     const { orgId } = route.params; // Receive orgId from navigation
     const [orgName, setOrgName] = useState('');
     const [logoUrl, setLogoUrl] = useState('');
+
+    const handleNavigateToTrees = () => {
+        // Update the global state to switch tabs
+        setCurrentTab('trees');
+      };
   
     useEffect(() => {
         const fetchOrgDetailsAndLogo = async () => {
@@ -104,17 +112,17 @@ const Donate = ({ navigation, route }) => {
   // To get the Donation Description for the confirmation message  
   const getDonationDescription = () => {
     if (isButtonSelected1(0)) {
-      return "One-Time Donation";
+      return "One-Time";
     } else if (isButtonSelected1(1)) {
       let frequency = "";
       if (isButtonSelected3(3)) {
-        frequency = "Daily";
-      } else if (isButtonSelected3(4)) {
         frequency = "Weekly";
-      } else if (isButtonSelected3(5)) {
+      } else if (isButtonSelected3(4)) {
         frequency = "Monthly";
+      } else if (isButtonSelected3(5)) {
+        frequency = "Annually";
       }
-      return `${frequency} Donation`;
+      return `${frequency}`;
     }
     // Default to a generic description
     return "Select donation type";
@@ -124,15 +132,15 @@ const Donate = ({ navigation, route }) => {
   const getAmountText = () => {
     // If there's text in the TextInput, use it as the amount
     if (outlinedText.trim() !== '') {
-      return `$${outlinedText} USD`;
+      return `$${outlinedText}`;
     } else {
       // Otherwise, use the selected button value
       if (isButtonSelected2(3)) {
-        return "$25.00 USD";
+        return "25.00";
       } else if (isButtonSelected2(4)) {
-        return "$50.00 USD";
+        return "50.00";
       } else if (isButtonSelected2(5)) {
-        return "$100.00 USD";
+        return "100.00";
       }
       // Default to an empty string
       return "";
@@ -211,14 +219,14 @@ const Donate = ({ navigation, route }) => {
                   style={styles.tqlogo}
                 />
                 <Button
-                  mode="contained"
-                  buttonColor="#599884" 
-                  style={{marginTop: 20}}
-                  onPress={() => alert('Navigate to the TREE')}
+                    mode="contained"
+                    buttonColor="#599884" 
+                    style={{marginTop: 20}}
+                    onPress={() => handleNavigateToTrees}
                 >
-                  <Text style={styles.tqtext} variant="headlineSmall">
-                    VIEW YOUR TREE
-                  </Text>
+                    <Text style={styles.tqtext} variant="headlineSmall">
+                        VIEW YOUR TREE
+                    </Text>
                 </Button>
               </View>
         ) : (
@@ -270,21 +278,21 @@ const Donate = ({ navigation, route }) => {
                     onPress={() => handlePress3(3)}
                     style={styles.button}
                   >
-                    Daily
+                    Weekly
                   </Button>
                   <Button
                     mode={isButtonSelected3(4) ? 'contained' : 'outlined'}
                     onPress={() => handlePress3(4)}
                     style={styles.button}
                   >
-                    Weekly
+                    Monthly
                   </Button>
                   <Button
                     mode={isButtonSelected3(5) ? 'contained' : 'outlined'}
                     onPress={() => handlePress3(5)}
                     style={styles.button}
                   >
-                    Monthly
+                    Annually
                   </Button>
                 </View>
               </>

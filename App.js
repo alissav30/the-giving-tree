@@ -5,10 +5,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import theme from './themes.js'; 
 import { PaperProvider } from 'react-native-paper';
+import { NavigationProvider } from './NavigationContext'; // Import the NavigationProvider
 
 
 export default function App() {
   return (
+    <NavigationProvider>
     <PaperProvider theme={theme}>
     <SafeAreaProvider>
       <NavigationContainer>
@@ -17,6 +19,7 @@ export default function App() {
       </NavigationContainer>
     </SafeAreaProvider>
     </PaperProvider>
+    </NavigationProvider> 
   );
 }
 

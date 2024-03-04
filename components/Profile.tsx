@@ -97,7 +97,7 @@ const Profile = ({ navigation }) => {
           Member since 2023
         </Text>
         <Text style={styles.headerText} variant="headlineMedium">
-          Top Organizations
+          Your Favorite Organizations
         </Text>
       <View style={styles.topOrgsContainer}>
         <View style={styles.orgsContainer}>
