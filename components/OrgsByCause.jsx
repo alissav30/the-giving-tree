@@ -67,6 +67,7 @@ const OrgsByCause = ({ route, navigation }) => {
                             <View style={styles.textContainer}>
                                 <Title style={styles.orgTitle}>{org.organization_name}</Title>
                                 <Paragraph numberOfLines={4} ellipsizeMode="tail" style={styles.mission}>{org.organization_mission_statement}</Paragraph>
+                                
                                 <Button
                                     mode="outlined"
                                     onPress={() => navigation.navigate('OrgInfo', { orgKey: org.key })}
