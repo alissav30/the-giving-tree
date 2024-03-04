@@ -81,12 +81,12 @@ const OrgInfo = ({ navigation, route }) => {
                 </View>
             </View>
             <Button
-                mode="contained"
-                onPress={() => navigation.navigate('Donate', { orgId: orgKey })}
-                style={styles.donateButton}
-            >
-                Donate Now
-            </Button>
+            mode="contained"
+            onPress={() => navigation.navigate('Donate', { orgId: orgKey, organization_name: orgInfo.organization_name })}
+            style={styles.donateButton}
+        >
+            Donate Now
+        </Button>
         </ScrollView>
     );
 };

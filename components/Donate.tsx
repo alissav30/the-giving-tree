@@ -1,13 +1,74 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Image, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Button, TextInput, Text, Modal, Portal, PaperProvider } from 'react-native-paper';
 import { inputReducer, State } from '../utils';
+import { database } from '../firebase.js';
+import { ref, set, push } from "firebase/database";
+import organizationsData from '../organizations.json';
+import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
+import { app } from '../firebase.js'; 
 
-const Donate = ( { navigation } ) => {
+const Donate = ({ navigation, route }) => {
+    const { orgId } = route.params; // Receive orgId from navigation
+    const [orgName, setOrgName] = useState('');
+    const [logoUrl, setLogoUrl] = useState('');
+  
+    useEffect(() => {
+        const fetchOrgDetailsAndLogo = async () => {
+            const orgData = organizationsData.organizations[orgId];
+            if (orgData) {
+                setOrgName(orgData.organization_name);
+    
+                const storage = getStorage(app);
+                const logoPath = orgData.logo_url;
+                const logoRef = storageRef(storage, logoPath);
+                try {
+                    const url = await getDownloadURL(logoRef);
+                    setLogoUrl(url); 
+                } catch (error) {
+                    console.log('Error fetching logo URL:', error);
+                    setLogoUrl(''); 
+                }
+            }
+        };
+    
+        fetchOrgDetailsAndLogo();
+    }, [orgId]);
+    
+    
+    
+  
   const [isConfirmationVisible, setConfirmationVisible] = useState(false);
 
-  // Used to display the big Thank You message
+  const writeDonationData = (orgName, donateAmt, date, recurring) => {
+    console.log(`Writing donation data: ${orgName}, ${donateAmt}, ${date}, ${recurring}`);
+    const donationRef = push(ref(database, 'donations'));
+    
+    set(donationRef, {
+      orgName,
+      donateAmt,
+      date,
+      recurring,
+    }).then(() => console.log("Donation data written successfully."))
+      .catch((error) => console.error("Error writing donation data: ", error));
+  };
+
   const handleConfirm = () => {
+    // Example date and recurring flag setup
+    const date = new Date();
+    const formattedDate = date.toISOString().split('T')[0]; // For "YYYY-MM-DD" format
+    let recurring = "No"; // Default to "No"
+  
+    if (isRecurringSelected) {
+        if (selectedButton3 === 3) recurring = "Daily";
+        else if (selectedButton3 === 4) recurring = "Weekly";
+        else if (selectedButton3 === 5) recurring = "Monthly";
+    }
+    const donateAmt = getAmountText(); // This should fetch the donation amount text
+  
+    // Call writeDonationData with the donation details
+    writeDonationData(orgName, donateAmt, formattedDate, recurring);
+  
     setConfirmationVisible(true);
   };
 
@@ -129,41 +190,44 @@ const Donate = ( { navigation } ) => {
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
 
-  return (
-    <PaperProvider>
-      <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={navigation.goBack} style={styles.backButton}>
-            <Text style={styles.backButtonText}>Back</Text>
-        </TouchableOpacity>
-        {isConfirmationVisible ? (
-          <View style={styles.tqcontainer}>
-          <Text style={styles.tqtext} variant="headlineSmall">
-              Thank you for your donation to
-          </Text>
-          <Text style={styles.tqtext}  variant="displayMedium">
-              Ocean Alliance
-          </Text>
-          <Image
-              source={require('../assets/ocean_alliance_logo.png')}  // Replace with the actual path to your image
-              style={styles.tqlogo}
-          />
-          <Button
-          mode="contained"
-          buttonColor="#599884"
-          onPress={() => alert('Navigate to the TREE')}
-          >
-              <Text style={styles.tqtext} variant="headlineSmall">
-                  VIEW YOUR TREE
-              </Text>
-          </Button>
-        </View>
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <PaperProvider>
+          <SafeAreaView style={styles.container}>
+            <TouchableOpacity onPress={navigation.goBack} style={styles.backButton}>
+              <Text style={styles.backButtonText}>Back</Text>
+            </TouchableOpacity>
+            {isConfirmationVisible ? (
+              <View style={styles.tqcontainer}>
+                <Text style={[styles.tqtext, { textAlign: 'left', marginRight: 20 }]} variant="headlineSmall">
+                    Thank you for your donation to
+                </Text>
+                <Text style={[styles.tqtext, { textAlign: 'left' }]} variant="displaySmall">
+                    {orgName}
+                </Text>    
+                {/* Logo Image */}
+                <Image
+                  source={{ uri: logoUrl }} // Use the fetched logo URL
+                  style={styles.tqlogo}
+                />
+                <Button
+                  mode="contained"
+                  buttonColor="#599884" 
+                  style={{marginTop: 20}}
+                  onPress={() => alert('Navigate to the TREE')}
+                >
+                  <Text style={styles.tqtext} variant="headlineSmall">
+                    VIEW YOUR TREE
+                  </Text>
+                </Button>
+              </View>
         ) : (
           <>
             <Portal>
               <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
                 <Text variant="titleLarge">Confirm Your Donation</Text>
                 <View style={styles.modalTextBox}>
-                  <Text style={styles.smallMargin}>To: Ocean Alliance</Text>
+                  <Text style={styles.smallMargin}>To: {orgName}</Text>
                   <Text style={styles.smallMargin}>Amount: {getAmountText()} </Text>
                   <Text style={styles.smallMargin}>Frequency: {getDonationDescription()}</Text>
                 </View>
@@ -178,8 +242,8 @@ const Donate = ( { navigation } ) => {
               </Modal>
             </Portal>
             <Text variant="titleMedium">Your Donation To</Text>
-            <Text variant="displayMedium" style={styles.input}>
-              Ocean Alliance
+            <Text variant="displaySmall" style={styles.input}>
+              {orgName}
             </Text>
             <View style={styles.row}>
               <Button
@@ -254,29 +318,21 @@ const Donate = ( { navigation } ) => {
             </View>
             <View style={styles.wide}>
             <TextInput
-              mode="outlined"
-              placeholder="enter custom amount"
-              value={outlinedText}
-              onChangeText={(text) => {
-                const numericText = text.replace(/[^0-9]/g, '');
-                inputActionHandler('outlinedText', numericText);
-              }}
-              keyboardType="numeric"
-              left={
-                <TextInput.Icon
-                  icon="currency-usd"
-                  color={outlineLeftIcon}
-                />
-              }
-              maxLength={10}
-              right={
-                outlinedText.trim() !== '' && (
-                  <TextInput.Icon
-                    icon="close-circle"
-                    onPress={() => inputActionHandler('outlinedText', '')}
-                  />
-                )
-              }
+                mode="outlined"
+                placeholder="Enter custom amount"
+                value={outlinedText}
+                onChangeText={(text) => {
+                    const numericText = text.replace(/[^0-9]/g, '');
+                    // Replace 'inputActionHandler' with the correct function to update 'outlinedText'
+                    inputActionHandler('outlinedText', numericText);
+                }}
+                keyboardType="numeric"
+                returnKeyType="done" // Specifies the return key as 'Done'
+                onSubmitEditing={Keyboard.dismiss} // Dismisses the keyboard when 'Done' is pressed
+                left={<TextInput.Icon name="currency-usd" />}
+                right={outlinedText.trim() !== '' && (
+                    <TextInput.Icon name="close-circle" onPress={() => inputActionHandler('outlinedText', '')} />
+                )}
             />
             </View>
             <Text variant="titleSmall" style={styles.input}>
@@ -315,6 +371,8 @@ const Donate = ( { navigation } ) => {
         )}
       </SafeAreaView>
     </PaperProvider>
+    </TouchableWithoutFeedback>
+
   );
 };
 
@@ -390,21 +448,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#5A6F72',
-    padding: 28, // Adjust the padding to add space around the elements
+    paddingHorizontal: 28,
     width: '100%',
+    maxHeight: 650,
+    borderRadius: 40,
   },
   tqtext: {
     color: 'white',
-    marginBottom: 10, // Add margin bottom to create space between text elements
+    marginBottom: 15, // Add margin bottom to create space between text elements
   },
   tqlogo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-  },
+    width: 200, // Increase logo width
+    height: 150, // Increase logo height
+    resizeMode: 'contain',
+    marginVertical: 15, // Increase space around the logo
+  },  
   wide: {
     width: '100%'
-  }
+  },
 });
 
 export default Donate;
