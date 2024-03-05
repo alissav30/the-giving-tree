@@ -17,6 +17,7 @@ const Trees = () => {
   const [donationsCount, setDonationsCount] = useState(0);
 
   useEffect(() => {
+    console.log("back in useEffect")
     const currentYear = new Date().getFullYear();
     const donationsRef = ref(database, 'donations');
 
@@ -27,16 +28,21 @@ const Trees = () => {
       Object.values(donations).forEach((donation) => {
         const donationYear = new Date(donation.date).getFullYear();
         if (donationYear === currentYear) {
-          if (donation.recurring === 'No') {
+          if (donation.recurring === 'No' || donation.recurring === 'Annually') {
             count += 1;
-          } else if (donation.recurring === 'Weekly') {
-            const weeks = Math.floor((new Date() - new Date(donation.date)) / (7 * 24 * 60 * 60 * 1000));
+        } else if (donation.recurring === 'Weekly') {
+            const start = new Date(donation.date).getTime(); // Ensure this is a number
+            const now = new Date().getTime(); // Ensure this is a number
+            const diff = now - start; // Difference in milliseconds
+            const weeks = Math.floor(diff / (7 * 24 * 60 * 60 * 1000)); // Convert milliseconds to weeks
             count += weeks;
           } else if (donation.recurring === 'Monthly') {
-            const months = new Date().getMonth() - new Date(donation.date).getMonth() + 
-                           (12 * (new Date().getFullYear() - new Date(donation.date).getFullYear()));
+            const startMonth = new Date(donation.date).getMonth();
+            const startYear = new Date(donation.date).getFullYear();
+            const now = new Date();
+            const months = (now.getMonth() - startMonth) + (12 * (now.getFullYear() - startYear));
             count += months;
-          }
+          }          
         }
       });
 
