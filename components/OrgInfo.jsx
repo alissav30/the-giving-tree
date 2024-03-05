@@ -132,10 +132,11 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     title: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         marginVertical: 12,
         textAlign: 'center',
+        maxWidth: '60%',
     },
     mission: {
         fontSize: 16,
