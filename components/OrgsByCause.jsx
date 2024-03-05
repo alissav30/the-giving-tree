@@ -33,16 +33,16 @@ const OrgsByCause = ({ route, navigation }) => {
                 case 'Alphabetical':
                     orgsWithImages.sort((a, b) => a.organization_name.localeCompare(b.organization_name));
                     break;
-                case 'Financial Impact':
+                case 'Financial Need':
                     // Assuming each org has a financial_impact field
-                    orgsWithImages.sort((a, b) => b.financial_impact - a.financial_impact);
+                    orgsWithImages.sort((a, b) => b.financial_need - a.financial_need);
                     break;
 
                 case 'Local Contribution':
                     orgsWithImages.sort((a, b) => b.local_contribution - a.local_contribution);
                     break;
-                case 'Financial Need':
-                    orgsWithImages.sort((a, b) => b.financial_need - a.financial_need);
+                case 'Dollar Impact':
+                    orgsWithImages.sort((a, b) => b.dollar_impact - a.dollar_impact);
                     break;
                 case 'Most In Need':
                     orgsWithImages.sort((a, b) => b.most_in_need - a.most_in_need);
@@ -94,7 +94,7 @@ const OrgsByCause = ({ route, navigation }) => {
 
             <FlatList
                 horizontal
-                data={['Alphabetical', 'Most In Need', 'Financial Need', 'Local Contribution', 'Financial Impact']}
+                data={['Alphabetical', 'Most In Need', 'Financial Need', 'Local Contribution', 'Dollar Impact']}
                 renderItem={renderFilterButton}
                 keyExtractor={item => item}
                 contentContainerStyle={styles.filterContainer}
