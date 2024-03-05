@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Image, StyleSheet, Text, Dimensions } from 'react-native';
+import { ScrollView, View, Image, StyleSheet, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { Searchbar, Button, Card, Title, PaperProvider } from 'react-native-paper';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import organizationsData from '../organizations.json'; 
@@ -113,11 +113,14 @@ const Browse = ({ navigation }) => {
             <View style={styles.recommendedOrgsContainer}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     {recommendedOrgs.map((org) => (
+                    
                         <Card key={org.id} style={styles.orgCard}>
-                            <Card.Content>
-                                <Title numberOfLines={1} ellipsizeMode="tail" style={styles.orgTitle}>{org.organization_name}</Title>
-                            </Card.Content>
-                            <Card.Cover source={{ uri: org.imageUrl }} style={styles.orgImage} resizeMode="contain" />
+                            <TouchableOpacity key={org.id} onPress={() => navigation.navigate('OrgInfo', { orgKey: org.id })}>
+                                <Card.Content>
+                                    <Title numberOfLines={1} ellipsizeMode="tail" style={styles.orgTitle}>{org.organization_name}</Title>
+                                </Card.Content>
+                                <Card.Cover source={{ uri: org.imageUrl }} style={styles.orgImage} resizeMode="contain" />
+                            </TouchableOpacity> 
                         </Card>
                     ))}
                 </ScrollView>
