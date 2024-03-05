@@ -334,7 +334,7 @@
         "logo_url": "aspca_logo.png",
         "website_url": "https://secure.aspca.org/",
         "other_pictures": ["aspca_1.jpeg","aspca_2.jpeg","aspca_3.jpeg"],
-        "financial_need": 0,
+        "financial_need": 1,
         "dollar_impact": 0,
         "local_contribution": 0,
         "most in need": 35,
@@ -350,7 +350,7 @@
         "financial_need": 0,
         "dollar_impact": 0,
         "local_contribution": 0,
-        "most in need": 70,
+        "most in need": 100,
         "paypal_url": "https://www.paypal.com/fundraiser/charity/19271"
     },
     "TheHumaneSociety": {

@@ -31,18 +31,28 @@ const Trees = () => {
           if (donation.recurring === 'No' || donation.recurring === 'Annually') {
             count += 1;
         } else if (donation.recurring === 'Weekly') {
-            const start = new Date(donation.date).getTime(); // Ensure this is a number
-            const now = new Date().getTime(); // Ensure this is a number
-            const diff = now - start; // Difference in milliseconds
-            const weeks = Math.floor(diff / (7 * 24 * 60 * 60 * 1000)); // Convert milliseconds to weeks
-            count += weeks;
+            try {
+              const startDate = new Date(donation.date);
+              const currentDate = new Date();
+              const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
+              const diffInMilliseconds = currentDate.getTime() - startDate.getTime();
+              const weeks = Math.floor(diffInMilliseconds / millisecondsPerWeek);
+              count += weeks;
+            } catch (error) {
+              console.error("Error in Weekly calculation:", error);
+              // Handle error or fallback logic here
+            }
           } else if (donation.recurring === 'Monthly') {
-            const startMonth = new Date(donation.date).getMonth();
-            const startYear = new Date(donation.date).getFullYear();
-            const now = new Date();
-            const months = (now.getMonth() - startMonth) + (12 * (now.getFullYear() - startYear));
-            count += months;
-          }          
+            try {
+              const startDate = new Date(donation.date);
+              const currentDate = new Date();
+              const months = (currentDate.getMonth() - startDate.getMonth()) + (12 * (currentDate.getFullYear() - startDate.getFullYear()));
+              count += months;
+            } catch (error) {
+              console.error("Error in Monthly calculation:", error);
+              // Handle error or fallback logic here
+            }
+          }             
         }
       });
 
