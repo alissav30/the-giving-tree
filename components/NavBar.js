@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
 import Donate from './Donate.tsx'; 
 import Profile from './Profile.tsx';
@@ -24,6 +24,12 @@ const NavBar = ({ selectedIndex }) => {
     { key: 'profile', title: 'Profile', focusedIcon: 'account-circle', unfocusedIcon: 'account-circle-outline' },
     { key: 'forms', title: 'Forms', focusedIcon: 'file-document-multiple', unfocusedIcon: 'file-document-multiple-outline' },
   ]);
+
+  useEffect(() => {
+    // Find the index of the currentTab in your routes array
+    const tabIndex = routes.findIndex((route) => route.key === currentTab);
+    setIndex(tabIndex >= 0 ? tabIndex : 0);
+  }, [currentTab]);
 
   const handleIndexChange = (newIndex) => {
     setIndex(newIndex);
