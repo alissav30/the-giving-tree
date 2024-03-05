@@ -6,7 +6,7 @@ const theme = {
   ...PaperDefaultTheme,
   colors: {
     ...PaperDefaultTheme.colors,
-    primary: '#5A6F72', // Dark green
+    primary: '#599884', // Dark green
     accent: '#599884',  // Brighter green
     background: '#ecf0f1', // Set your background color
   },
