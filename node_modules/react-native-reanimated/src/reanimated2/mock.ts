@@ -1,4 +1,4 @@
-/* eslint-disable node/no-callback-literal */
+/* eslint-disable n/no-callback-literal */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 'use strict';
@@ -114,8 +114,8 @@ const ReanimatedV2 = {
   useAnimatedRef: () => ({ current: null }),
   useAnimatedReaction: NOOP,
   useAnimatedProps: IMMEDIATE_CB_INVOCATION,
-  ReduceMotion: ReduceMotion,
-  SensorType: SensorType,
+  ReduceMotion,
+  SensorType,
   useAnimatedSensor: () => ({
     sensor: {
       value: {
@@ -233,6 +233,7 @@ const ReanimatedV2 = {
   'SlideInUp',
   'SlideInDown',
   'SlideOutUp',
+  'SlideOutDown',
 
   'ZoomInRotate',
   'ZoomInLeft',
