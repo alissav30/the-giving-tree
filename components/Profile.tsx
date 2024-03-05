@@ -44,28 +44,30 @@ interface Donation {
     total: number;
   }
 
-  const calculateMonthlyTotals = (donations: Donation[], monthsBack = 12): MonthlyTotal[] => {
+  const calculateMonthlyTotals = (donations, monthsBack = 12) => {
     const now = new Date();
-    const monthlyTotals: MonthlyTotal[] = Array.from({ length: monthsBack }).map((_, i) => ({
+    const monthlyTotals = Array.from({ length: monthsBack }).map((_, i) => ({
       month: new Date(now.getFullYear(), now.getMonth() - i, 1).toISOString().substr(0, 7),
       total: 0,
     })).reverse();
   
     donations.forEach(donation => {
-        if (!isNaN(donation.amount)) {
+      if (!isNaN(donation.amount)) {
         const donationDate = new Date(donation.date);
-        const index = donationDate.getMonth() - now.getMonth() + (donationDate.getFullYear() - now.getFullYear()) * 12;
+        // Adjust index calculation to correctly map the donation month to the monthlyTotals array
+        const monthDiff = (donationDate.getFullYear() - now.getFullYear()) * 12 + donationDate.getMonth() - now.getMonth();
+        const index = monthsBack - monthDiff - 1;
         if (index >= 0 && index < monthsBack) {
-            monthlyTotals[index].total += donation.amount; // Directly use donation.amount as it's already a number
-            // Extend here to handle recurring payments as needed
-        } else {
-            console.error("Found NaN in donation amounts", donation);
-          }      
+          monthlyTotals[index].total += donation.amount;
+        }
+      } else {
+        console.error("Found NaN in donation amounts", donation);
       }
     });
   
     return monthlyTotals;
   };
+  
   
   
 
@@ -82,8 +84,8 @@ interface Donation {
   };
 
   const calculateTopOrganizations = (donationsArray: Donation[]): OrganizationSummary[] => {
-    console.log("donationsArray", donationsArray)
-    console.log("is donations array an array", Array.isArray(donationsArray))
+    //console.log("donationsArray", donationsArray)
+    //console.log("is donations array an array", Array.isArray(donationsArray))
     const orgDonations: Record<string, OrganizationData> = donationsArray.reduce((acc, donation) => {
       const { orgName, date } = donation;
       if (acc[orgName]) {
@@ -118,7 +120,7 @@ interface Donation {
         }
       })
       .slice(0, 3); // Take top 3
-    console.log("sortedOrgs", sortedOrgs)
+    //console.log("sortedOrgs", sortedOrgs)
   
     return sortedOrgs;
   };
@@ -142,7 +144,7 @@ const Profile = ({ navigation }) => {
       try {
         const donationsSnapshot = await get(ref(database, 'donations'));
         if (donationsSnapshot.exists()) {
-          console.log("gets into donations snapshot");
+        //  console.log("gets into donations snapshot");
           const donationsData = donationsSnapshot.val();
           const donationsArray = donationsData && typeof donationsData === 'object'
             ? Object.keys(donationsData).map(key => ({
@@ -154,6 +156,8 @@ const Profile = ({ navigation }) => {
           const topOrgs = calculateTopOrganizations(donationsArray);
           const monthlyTotals = calculateMonthlyTotals(donationsArray);
           const upcomingPaymentsData = calculateUpcomingPayments(donationsArray);
+
+          console.log("monthlyTotals", monthlyTotals)
     
           // Update state with the processed data
           setTopOrganizations(topOrgs);
@@ -260,19 +264,18 @@ const Profile = ({ navigation }) => {
                     style={styles.orgLogo}
                 />
                 {/* Display the organization's name. Fall back to a generic name if not found. */}
-                <Text style={styles.orgName}>{orgDetails ? orgDetails.organization_name : 'Organization'}</Text>
+                <Text style={styles.orgText}>{orgDetails ? orgDetails.organization_name : 'Organization'}</Text>
                 </Surface>
             );
             })}
         </View>
         </View>
 
-
         {/* Donations Graph Section */}
         <Text style={styles.headerText} variant="headlineMedium">
         Donation History
         </Text>
-        {/*<LineChart
+        <LineChart
         data={{
             labels: labels,
             datasets: [
@@ -287,19 +290,19 @@ const Profile = ({ navigation }) => {
         yAxisSuffix="K" // Use "K" if your values are in thousands, otherwise adjust or remove
         yAxisInterval={1} // Adjust as needed
         chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
+            backgroundColor: "#C2C2C7",
+            backgroundGradientFrom: "#C2C2C7",
+            backgroundGradientTo: "#C2C2C7",
             decimalPlaces: 2, // Adjust as needed
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            color: () => "#599884", // Directly returns the hex code for the line color
+            labelColor: () => "#ffffff", // Adjusts the color of the yAxis and xAxis labels
             style: {
-            borderRadius: 16,
+                borderRadius: 16,
             },
             propsForDots: {
-            r: "6",
-            strokeWidth: "2",
-            stroke: "#ffa726",
+                r: "6",
+                strokeWidth: "2",
+                stroke: "#5A6F72", // Dot border color
             },
         }}
         bezier
@@ -307,7 +310,8 @@ const Profile = ({ navigation }) => {
             marginVertical: 8,
             borderRadius: 16,
         }}
-        />*/}
+        />
+
 
           {/* Upcoming Payments Section */}
           <Text style={styles.headerText} variant="headlineMedium">Upcoming Payments</Text>
@@ -394,20 +398,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   orgBox: {
-    width: 100,
-    height: 100,
+    width: 115,
+    height: 125,
     borderWidth: 1,
     borderColor: "#DAD7D7",
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    margin: 10,
+    margin: 7,
     borderRadius: 20,
     padding: 10, // Adjust padding to ensure text isn't touching the borders
 
   },
   orgLogo: {
-    width: 70,
+    width: 90,
     height: 70,
     resizeMode: 'contain',
   },
@@ -432,8 +436,11 @@ const styles = StyleSheet.create({
   imageSetting: {
     width: 40,
     height: 40,
-    
-  }
+  },
+  orgText: {
+    // Assuming this is your style for the text in each organization box
+    textAlign: 'center', // Center text horizontally
+  },
 });
 
 export default Profile;

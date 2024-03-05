@@ -51,10 +51,12 @@ const Donate = ({ navigation, route }) => {
   const writeDonationData = (orgName, donateAmt, date, recurring) => {
     console.log(`Writing donation data: ${orgName}, ${donateAmt}, ${date}, ${recurring}`);
     const donationRef = push(ref(database, 'donations'));
+    const amount = parseFloat(donateAmt.replace(/[^0-9.-]+/g, '')); // Removes any non-numeric characters before conversion
+
     
     set(donationRef, {
       orgName,
-      donateAmt,
+      donateAmt: amount,
       date,
       recurring,
     }).then(() => console.log("Donation data written successfully."))
