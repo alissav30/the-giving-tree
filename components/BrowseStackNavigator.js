@@ -4,8 +4,17 @@ import Browse from './Browse';
 import OrgsByCause from './OrgsByCause';
 import OrgInfo from './OrgInfo';
 import Donate from "./Donate";
+import Trees from './Trees';
+
 
 const Stack = createNativeStackNavigator();
+
+const handleNavigateToTrees = () => {
+  // Update the global state to switch tabs
+
+  setNavBarIndex(0);
+  navigation.navigate("Trees")
+};
 
 const BrowseStackNavigator = () => {
   return (
@@ -13,7 +22,8 @@ const BrowseStackNavigator = () => {
       <Stack.Screen name="BrowseMain" component={Browse} options={{ headerShown: false }} />
       <Stack.Screen name="OrgsByCause" component={OrgsByCause} options={{ headerShown: false }}/>
       <Stack.Screen name="OrgInfo" component={OrgInfo} options={{ headerShown: false }}/>
-      <Stack.Screen name="Donate" component={Donate} options={{ headerShown: false }}/>
+      <Stack.Screen name="Donate" component={Donate} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="Trees" component={Trees} options={{ headerShown: false }}/> */}
     </Stack.Navigator>
   );
 };

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
 import NavBar from './components/NavBar.js';
@@ -9,17 +10,20 @@ import { NavigationProvider } from './NavigationContext'; // Import the Navigati
 
 
 export default function App() {
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+
   return (
     <NavigationProvider>
     <PaperProvider theme={theme}>
     <SafeAreaProvider>
       <NavigationContainer>
         <StatusBar style="auto" />
-        <NavBar />
+        <NavBar selectedIndex={setSelectedIndex} />
       </NavigationContainer>
     </SafeAreaProvider>
-    </PaperProvider>
+    </PaperProvider >
     </NavigationProvider> 
+
   );
 }
 

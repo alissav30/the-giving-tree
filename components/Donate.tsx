@@ -11,15 +11,24 @@ import { useNavigationContext } from '../NavigationContext';
 import theme from '../themes';
 
 const Donate = ({ navigation, route }) => {
-    const { setCurrentTab } = useNavigationContext();
-    const { orgId } = route.params; // Receive orgId from navigation
+    const { navigateToTab } = useNavigationContext();
+    const { orgId, onIndexChange } = route.params; // Receive orgId from navigation
     const [orgName, setOrgName] = useState('');
     const [logoUrl, setLogoUrl] = useState('');
 
     const handleNavigateToTrees = () => {
-        // Update the global state to switch tabs
-        setCurrentTab('trees');
+      console.log("navigate to the trees", navigateToTab);
+      // navigation.navigate("Trees");
+      // setCurrentTab("Trees");
+      navigateToTab('trees'); 
+
+
       };
+
+      const handleNavigateToNavBarScreen = () => {
+        navigation.navigate('NavBarScreen'); // Replace 'NavBarScreen' with the actual route name
+      };
+
   
     useEffect(() => {
         const fetchOrgDetailsAndLogo = async () => {
@@ -220,16 +229,16 @@ const Donate = ({ navigation, route }) => {
                   source={{ uri: logoUrl }} // Use the fetched logo URL
                   style={styles.tqlogo}
                 />
-                <Button
-                    mode="contained"
-                    buttonColor="#599884" 
-                    style={{marginTop: 20}}
-                    onPress={() => handleNavigateToTrees}
+                <TouchableOpacity
+                    // mode="contained"
+                    // buttonColor="#599884" 
+                    
+                    onPress={handleNavigateToTrees}
                 >
                     <Text style={styles.tqtext} variant="headlineSmall">
                         VIEW YOUR TREE
                     </Text>
-                </Button>
+                </TouchableOpacity>
               </View>
         ) : (
           <>
