@@ -11,17 +11,22 @@ import { useNavigationContext } from '../NavigationContext';
 import theme from '../themes';
 
 const Donate = ({ navigation, route }) => {
-    const { setCurrentTab } = useNavigationContext();
+    const { navigateToTab } = useNavigationContext();
     const { orgId, onIndexChange } = route.params; // Receive orgId from navigation
     const [orgName, setOrgName] = useState('');
     const [logoUrl, setLogoUrl] = useState('');
 
     const handleNavigateToTrees = () => {
-      console.log("navigate to the trees");
-      navigation.navigate("Trees");
-      setCurrentTab("Trees");
+      console.log("navigate to the trees", navigateToTab);
+      // navigation.navigate("Trees");
+      // setCurrentTab("Trees");
+      navigateToTab('trees'); 
 
 
+      };
+
+      const handleNavigateToNavBarScreen = () => {
+        navigation.navigate('NavBarScreen'); // Replace 'NavBarScreen' with the actual route name
       };
 
   
@@ -74,9 +79,9 @@ const Donate = ({ navigation, route }) => {
     let recurring = "No"; // Default to "No"
   
     if (isRecurringSelected) {
-        if (selectedButton3 === 3) recurring = "Daily";
-        else if (selectedButton3 === 4) recurring = "Weekly";
-        else if (selectedButton3 === 5) recurring = "Monthly";
+        if (selectedButton3 === 3) recurring = "Weekly";
+        else if (selectedButton3 === 4) recurring = "Monthly";
+        else if (selectedButton3 === 5) recurring = "Annually";
     }
     const donateAmt = getAmountText(); // This should fetch the donation amount text
   

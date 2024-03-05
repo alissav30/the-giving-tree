@@ -17,6 +17,7 @@ const Trees = () => {
   const [donationsCount, setDonationsCount] = useState(0);
 
   useEffect(() => {
+    console.log("back in useEffect")
     const currentYear = new Date().getFullYear();
     const donationsRef = ref(database, 'donations');
 
@@ -27,16 +28,31 @@ const Trees = () => {
       Object.values(donations).forEach((donation) => {
         const donationYear = new Date(donation.date).getFullYear();
         if (donationYear === currentYear) {
-          if (donation.recurring === 'No') {
+          if (donation.recurring === 'No' || donation.recurring === 'Annually') {
             count += 1;
-          } else if (donation.recurring === 'Weekly') {
-            const weeks = Math.floor((new Date() - new Date(donation.date)) / (7 * 24 * 60 * 60 * 1000));
-            count += weeks;
+        } else if (donation.recurring === 'Weekly') {
+            try {
+              const startDate = new Date(donation.date);
+              const currentDate = new Date();
+              const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
+              const diffInMilliseconds = currentDate.getTime() - startDate.getTime();
+              const weeks = Math.floor(diffInMilliseconds / millisecondsPerWeek);
+              count += weeks;
+            } catch (error) {
+              console.error("Error in Weekly calculation:", error);
+              // Handle error or fallback logic here
+            }
           } else if (donation.recurring === 'Monthly') {
-            const months = new Date().getMonth() - new Date(donation.date).getMonth() + 
-                           (12 * (new Date().getFullYear() - new Date(donation.date).getFullYear()));
-            count += months;
-          }
+            try {
+              const startDate = new Date(donation.date);
+              const currentDate = new Date();
+              const months = (currentDate.getMonth() - startDate.getMonth()) + (12 * (currentDate.getFullYear() - startDate.getFullYear()));
+              count += months;
+            } catch (error) {
+              console.error("Error in Monthly calculation:", error);
+              // Handle error or fallback logic here
+            }
+          }             
         }
       });
 

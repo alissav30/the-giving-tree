@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
 import { Card, Title, Paragraph, Button } from 'react-native-paper';
 import organizationsData from '../organizations.json'; 
 import app from '../firebase.js'; // Adjust the path as necessary
@@ -14,27 +14,42 @@ const OrgsByCause = ({ route, navigation }) => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredOrgs, setFilteredOrgs] = useState([]);
+    const [activeFilter, setActiveFilter] = useState('Alphabetical');
 
     useEffect(() => {
-        console.log('useEffect triggered'); // Check if useEffect is called
-        console.log('Cause tuple:', cause_tuple); // Check the value of cause_tuple
-    
-        if (!cause_tuple) {
-            console.log('Cause tuple is undefined or not set, exiting useEffect.');
-            return;
-        }
+        const fetchImageUrlsAndSort = async (orgs) => {
+            const storage = getStorage(app);
+            let orgsWithImages = await Promise.all(orgs.map(async (org) => {
+                const imageRef = ref(storage, `${org.logo_url}`);
+                const imageUrl = await getDownloadURL(imageRef).catch((error) => {
+                    console.log('Error fetching image URL:', error);
+                    return ''; // Return empty string or a default image URL in case of error
+                });
+                return { ...org, imageUrl };
+            }));
 
-        const storage = getStorage(app);
-        const fetchImageUrls = async (orgs) => {
-          return Promise.all(orgs.map(async (org) => {
-            const imageRef = ref(storage, `${org.logo_url}`);
-            const imageUrl = await getDownloadURL(imageRef).catch((error) => {
-              console.log('Error fetching image URL:', error);
-              return ''; // Return empty string or a default image URL in case of error
-            });
-            console.log('Image URL:', imageUrl); // Log the fetched image URL
-            return { ...org, imageUrl };
-          }));
+            // Sort organizations based on the active filter before setting them in state
+            switch(activeFilter) {
+                case 'Alphabetical':
+                    orgsWithImages.sort((a, b) => a.organization_name.localeCompare(b.organization_name));
+                    break;
+                case 'Financial Need':
+                    // Assuming each org has a financial_impact field
+                    orgsWithImages.sort((a, b) => b.financial_need - a.financial_need);
+                    break;
+
+                case 'Local Contribution':
+                    orgsWithImages.sort((a, b) => b.local_contribution - a.local_contribution);
+                    break;
+                case 'Dollar Impact':
+                    orgsWithImages.sort((a, b) => b.dollar_impact - a.dollar_impact);
+                    break;
+                case 'Most In Need':
+                    orgsWithImages.sort((a, b) => b.most_in_need - a.most_in_need);
+                    break;
+            }
+
+            setFilteredOrgs(orgsWithImages);
         };
 
         const filtered = Object.entries(organizationsData.organizations || {}).filter(([key, org]) =>
@@ -44,12 +59,31 @@ const OrgsByCause = ({ route, navigation }) => {
             ...org
         }));
 
-        fetchImageUrls(filtered).then((orgsWithImages) => {
-          console.log('Organizations with images:', orgsWithImages); // Log organizations with their image URLs
-          setFilteredOrgs(orgsWithImages);
-        });
+        fetchImageUrlsAndSort(filtered);
 
-    }, [cause_tuple]);
+    }, [cause_tuple, activeFilter]);
+
+    const ButtonFilter = ({ title }) => (
+        <TouchableOpacity
+            style={[
+                styles.filterButton,
+                activeFilter === title ? styles.filterButtonActive : styles.filterButtonInactive,
+            ]}
+            onPress={() => setActiveFilter(title)}
+        >
+            <Text
+                style={[
+                    styles.filterButtonText,
+                    activeFilter === title ? styles.filterButtonTextActive : {},
+                ]}
+            >
+                {title}
+            </Text>
+        </TouchableOpacity>
+    );
+
+    const renderFilterButton = ({ item }) => <ButtonFilter title={item} />;
+
 
     return (
         <ScrollView style={styles.container}>
@@ -57,6 +91,15 @@ const OrgsByCause = ({ route, navigation }) => {
                 <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
             <Text style={styles.title}>Organizations for {cause_tuple[0]}</Text>
+
+            <FlatList
+                horizontal
+                data={['Alphabetical', 'Most In Need', 'Financial Need', 'Local Contribution', 'Dollar Impact']}
+                renderItem={renderFilterButton}
+                keyExtractor={item => item}
+                contentContainerStyle={styles.filterContainer}
+                showsHorizontalScrollIndicator={false}
+            />
 
             <View style={styles.orgsContainer}>
                 {filteredOrgs.map((org) => (
@@ -85,8 +128,8 @@ const OrgsByCause = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 60,
         flex: 1,
-        paddingTop: 60,
         paddingHorizontal: 20,
         backgroundColor: '#F5F5F5',
     },
@@ -168,6 +211,29 @@ const styles = StyleSheet.create({
     },
     learnMoreButton: {
         marginTop: 4,
+    },
+    filterContainer: {
+        flexDirection: 'row',
+        marginBottom: 20,
+        paddingHorizontal: 10,
+    },
+    filterButton: {
+        borderWidth: 1,
+        borderColor: '#C2C2C7',
+        borderRadius: 20,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        marginRight: 8,
+        backgroundColor: '#FFFFFF', // Default background color
+    },
+    filterButtonActive: {
+        backgroundColor: '#C2C2C7', // Background color when active
+    },
+    filterButtonText: {
+        color: '#4E4C4D', // Default text color
+    },
+    filterButtonTextActive: {
+        color: '#FFFFFF', // Text color when active
     },
 });
 

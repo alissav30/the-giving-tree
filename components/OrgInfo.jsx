@@ -118,7 +118,7 @@ const OrgInfo = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 44,
+        marginTop: 44,
         paddingLeft: 8,
         paddingRight: 8,
     },
@@ -132,10 +132,11 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     title: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         marginVertical: 12,
         textAlign: 'center',
+        maxWidth: '60%',
     },
     mission: {
         fontSize: 16,
