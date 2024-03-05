@@ -8,11 +8,16 @@ import BrowseStackNavigator from './BrowseStackNavigator'; // Import the stack n
 import FormsStackNavigator2 from './FormsStackNavigator2.js';
 import ProfileStackNavigator from './ProfileStackNavigator.js';
 import FormStackNavigator from './FormStackNavigator.js';
+import { useNavigationContext } from '../NavigationContext.js';
+
+
 const MusicRoute = () => <Text>Music</Text>;
 const NotificationsRoute = () => <Text>Notifications</Text>;
 
-const NavBar = () => {
+const NavBar = ({ selectedIndex }) => {
   const [index, setIndex] = React.useState(0);
+  const { currentTab, navigateToTab } = useNavigationContext();
+
   const [routes] = React.useState([
     { key: 'trees', title: 'Trees', focusedIcon: 'tree', unfocusedIcon: 'tree-outline'},
     { key: 'browse', title: 'Browse', focusedIcon: 'folder-search', unfocusedIcon: 'folder-search-outline' },
@@ -22,27 +27,39 @@ const NavBar = () => {
 
   const handleIndexChange = (newIndex) => {
     setIndex(newIndex);
+    navigateToTab(routes[newIndex].key);
+
   };
 
-  const renderScene = ({ route }) => {
-    switch (route.key) {
-      case 'trees':
-        return <Trees onIndexChange={handleIndexChange} />;
-      case 'browse':
-        return <BrowseStackNavigator />;
-      case 'profile':
-        return <ProfileStackNavigator />;
-      case 'forms':
-        return <FormsStackNavigator2 />;
-      default:
-        return null;
-    }
-  };
+  // const renderScene = ({ route }) => {
+  //   switch (route.key) {
+  //     case 'trees':
+  //       return <Trees onIndexChange={handleIndexChange} />;
+  //     case 'browse':
+  //       return <BrowseStackNavigator />;
+  //     case 'profile':
+  //       return <ProfileStackNavigator />;
+  //     case 'forms':
+  //       return <FormsStackNavigator2 />;
+  //     default:
+  //       return null;
+  //   }
+  // };
+
+  const renderScene = BottomNavigation.SceneMap({
+    trees: Trees,
+    browse: BrowseStackNavigator,
+    profile: ProfileStackNavigator,
+    forms: FormsStackNavigator2,
+  });
 
   return (
     <BottomNavigation
       navigationState={{ index, routes }}
-      onIndexChange={setIndex}
+      onIndexChange={(newIndex) => {
+        setIndex(newIndex);
+        handleIndexChange(newIndex);
+      }}
       renderScene={renderScene}
       barStyle={{ backgroundColor: '#ddebe7' }}
       style={{ backgroundColor: '#ddebe7' }}
