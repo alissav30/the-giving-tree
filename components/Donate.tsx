@@ -70,9 +70,9 @@ const Donate = ({ navigation, route }) => {
     let recurring = "No"; // Default to "No"
   
     if (isRecurringSelected) {
-        if (selectedButton3 === 3) recurring = "Daily";
-        else if (selectedButton3 === 4) recurring = "Weekly";
-        else if (selectedButton3 === 5) recurring = "Monthly";
+        if (selectedButton3 === 3) recurring = "Weekly";
+        else if (selectedButton3 === 4) recurring = "Monthly";
+        else if (selectedButton3 === 5) recurring = "Annually";
     }
     const donateAmt = getAmountText(); // This should fetch the donation amount text
   
