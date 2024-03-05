@@ -12,7 +12,6 @@ const OrgsByCause = ({ route, navigation }) => {
     //console.log("check organizationsData[PlannedParenthood]",organizationsData.organizations["AmericanFoundationForSuicidePrevention"])
     //console.log("check organizationsData[PlannedParenthood[organization_mission_statement]]",organizationsData["PlannedParenthood"]["organization_mission_statement"])
 
-
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredOrgs, setFilteredOrgs] = useState([]);
 
@@ -143,6 +142,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 20, // Increased border radius for more rounded edges
         overflow: 'hidden', // Ensure the child components don't overflow the rounded corners
+        backgroundColor: 'white',
     },
     cardContent: {
         flexDirection: 'row',
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         marginRight: 16,
+        backgroundColor: 'white',
     },
     textContainer: {
         flex: 1,

@@ -1,31 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View, Image, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { database } from '../firebase.js';
 import { ref, onValue } from "firebase/database";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
-
-
-const TreeExplosionAnimation = ({ isVisible }) => {
-    const scale = useSharedValue(0);
-    const opacity = useSharedValue(1);
-  
-    const animatedStyles = useAnimatedStyle(() => ({
-      transform: [{ scale: scale.value }],
-      opacity: opacity.value,
-      // Additional styling for the explosion animation
-    }));
-  
-    useEffect(() => {
-      if (isVisible) {
-        scale.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) });
-        opacity.value = withTiming(0, { duration: 500 });
-      }
-    }, [isVisible]);
-  
-    return <Animated.View style={[styles.explosionAnimation, animatedStyles]} />;
-  };
 
 const Trees = () => {
   const treeImages = [
@@ -35,21 +13,6 @@ const Trees = () => {
     require('../assets/tree_person_4.png'),
     require('../assets/tree_person_5.png'),
   ];
-
-  const [isNewTreeEarned, setIsNewTreeEarned] = useState(false);
-    const prevTreeIndexRef = useRef();
-
-    useEffect(() => {
-    const newTreeIndex = Math.floor(donationsCount / 5);
-    const prevTreeIndex = prevTreeIndexRef.current;
-
-    if (newTreeIndex > prevTreeIndex) {
-        setIsNewTreeEarned(true);
-        setTimeout(() => setIsNewTreeEarned(false), 500); // Reset after animation
-    }
-
-    prevTreeIndexRef.current = newTreeIndex;
-    }, [donationsCount]);
 
   const [donationsCount, setDonationsCount] = useState(0);
 
@@ -105,10 +68,7 @@ const Trees = () => {
       {patches.map((patch, index) => (
         <View key={patch.key} style={[styles.circlePatch, styles[patch.side + 'Patch']]}>
           {index <= treeIndex ? (
-            <>
             <Image source={treeImages[index % treeImages.length]} style={styles.treePerson} />
-            {isNewTreeEarned && <TreeExplosionAnimation isVisible={isNewTreeEarned} />}
-            </>
           ) : null}
           {index === treeIndex + 1 ? (
             <>
@@ -225,13 +185,6 @@ const styles = StyleSheet.create({
     borderRadius: 70, // Adjust to match the oval shape
     width: 140, // Match the width of the patch
     height: 80, // Match the height of the patch
-  },
-  explosionAnimation: {
-    width: 100,
-    height: 100,
-    backgroundColor: 'yellow', // Example color
-    position: 'absolute',
-    borderRadius: 50,
   },
 });
 
