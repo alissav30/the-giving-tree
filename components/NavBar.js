@@ -10,6 +10,11 @@ import ProfileStackNavigator from './ProfileStackNavigator.js';
 import FormStackNavigator from './FormStackNavigator.js';
 const MusicRoute = () => <Text>Music</Text>;
 const NotificationsRoute = () => <Text>Notifications</Text>;
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['ViewPropTypes will be removed from React Native']);
+LogBox.ignoreLogs(['When setting overflow to hidden']);
+
 
 const NavBar = () => {
   const [index, setIndex] = React.useState(0);
