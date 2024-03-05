@@ -27,6 +27,8 @@ const Trees = () => {
 
       Object.values(donations).forEach((donation) => {
         const donationYear = new Date(donation.date).getFullYear();
+        console.log("donationYear", donationYear);
+        console.log("donation.recurring", donation.recurring);
         if (donationYear === currentYear) {
           if (donation.recurring === 'No' || donation.recurring === 'Annually') {
             count += 1;
@@ -36,17 +38,23 @@ const Trees = () => {
               const currentDate = new Date();
               const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
               const diffInMilliseconds = currentDate.getTime() - startDate.getTime();
-              const weeks = Math.floor(diffInMilliseconds / millisecondsPerWeek);
-              count += weeks;
+              const weeks = diffInMilliseconds / millisecondsPerWeek;
+              console.log("donation.date", donation.date)
+              console.log("donation.orgName", donation.orgName)
+              console.log("weeks", weeks)
+              const roundedWeeks = Math.ceil(weeks);
+              console.log("roundedWeeks", roundedWeeks)
+              count += roundedWeeks;
             } catch (error) {
               console.error("Error in Weekly calculation:", error);
-              // Handle error or fallback logic here
             }
           } else if (donation.recurring === 'Monthly') {
+            console.log("gets into month");
             try {
               const startDate = new Date(donation.date);
               const currentDate = new Date();
-              const months = (currentDate.getMonth() - startDate.getMonth()) + (12 * (currentDate.getFullYear() - startDate.getFullYear()));
+              const months = (currentDate.getMonth() - startDate.getMonth() + 1);
+              console.log("months", months)
               count += months;
             } catch (error) {
               console.error("Error in Monthly calculation:", error);
@@ -83,7 +91,7 @@ const Trees = () => {
 
       {patches.map((patch, index) => (
         <View key={patch.key} style={[styles.circlePatch, styles[patch.side + 'Patch']]}>
-          {index <= treeIndex ? (
+          {index <= treeIndex  ? (
             <Image source={treeImages[index % treeImages.length]} style={styles.treePerson} />
           ) : null}
           {index === treeIndex + 1 ? (
