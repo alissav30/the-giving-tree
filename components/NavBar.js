@@ -20,12 +20,24 @@ const NavBar = () => {
     { key: 'forms', title: 'Forms', focusedIcon: 'file-document-multiple', unfocusedIcon: 'file-document-multiple-outline' },
   ]);
 
-  const renderScene = BottomNavigation.SceneMap({
-    trees: Trees,
-    browse: BrowseStackNavigator, // Use the stack navigator here
-    profile: ProfileStackNavigator,
-    forms: FormsStackNavigator2,
-  });
+  const handleIndexChange = (newIndex) => {
+    setIndex(newIndex);
+  };
+
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case 'trees':
+        return <Trees onIndexChange={handleIndexChange} />;
+      case 'browse':
+        return <BrowseStackNavigator />;
+      case 'profile':
+        return <ProfileStackNavigator />;
+      case 'forms':
+        return <FormsStackNavigator2 />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <BottomNavigation
