@@ -338,7 +338,6 @@ const styles = StyleSheet.create({
         color: 'white', 
       },
      
-
       formBoxcontainer: {
         width: 150,
         height: 150,
@@ -347,6 +346,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         margin: 10,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
       },
       formBoxyearText: {
         fontSize: 25,

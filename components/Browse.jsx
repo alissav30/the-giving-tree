@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Image, StyleSheet, Text, Dimensions } from 'react-native';
-import { Searchbar, Button, Card, Title } from 'react-native-paper';
+import { Searchbar, Button, Card, Title, PaperProvider } from 'react-native-paper';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import organizationsData from '../organizations.json'; 
 import app from '../firebase.js'; // Adjust the path as necessary
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import theme from '../themes';
 
 const Browse = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -64,6 +65,7 @@ const Browse = ({ navigation }) => {
     );
 
     return (
+        <PaperProvider theme={theme}>
         <ScrollView style={styles.container}>
             <Searchbar
                 placeholder="Search"
@@ -121,6 +123,7 @@ const Browse = ({ navigation }) => {
                 </ScrollView>
             </View>
         </ScrollView>
+        </PaperProvider>
     );
 };
 
@@ -137,6 +140,7 @@ const styles = StyleSheet.create({
     searchBar: {
         marginHorizontal: 10,
         marginBottom: 20,
+        backgroundColor: 'white'
     },
     carouselContainer: {
         marginVertical: 20, // Add some vertical margin for spacing
@@ -171,8 +175,10 @@ const styles = StyleSheet.create({
     orgCard: {
         width: '30%',
         margin: 10,
+        backgroundColor: 'white'
     },
     orgImage: {
+        backgroundColor: 'white',
         width: '100%', // Ensure the image width matches the card width
         //height: 100, // Adjust the height as needed
         // You can also add resizeMode here if needed, but it's set to "contain" in the Card.Cover props
