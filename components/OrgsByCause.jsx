@@ -85,8 +85,8 @@ const OrgsByCause = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 60,
         flex: 1,
-        paddingTop: 60,
         paddingHorizontal: 20,
         backgroundColor: '#F5F5F5',
     },
