@@ -5,6 +5,7 @@ import OrgsByCause from './OrgsByCause';
 import OrgInfo from './OrgInfo';
 import Donate from "./Donate";
 import Trees from './Trees';
+import OrgWebView from '../utils/OrgWebView';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +24,7 @@ const BrowseStackNavigator = () => {
       <Stack.Screen name="OrgsByCause" component={OrgsByCause} options={{ headerShown: false }}/>
       <Stack.Screen name="OrgInfo" component={OrgInfo} options={{ headerShown: false }}/>
       <Stack.Screen name="Donate" component={Donate} options={{ headerShown: false }} />
+      <Stack.Screen name="OrgWebView" component={OrgWebView} options={{ headerShown: false }} />
       {/* <Stack.Screen name="Trees" component={Trees} options={{ headerShown: false }}/> */}
     </Stack.Navigator>
   );
