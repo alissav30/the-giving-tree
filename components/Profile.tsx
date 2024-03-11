@@ -19,9 +19,10 @@ import organizationsData from '../organizations.json';
 import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
 
 
+
 interface Donation {
     orgName: string;
-    amount: number; // Assuming amount is a string like "$25", adjust if your structure is different
+    donateAmt: number; // Assuming amount is a string like "$25", adjust if your structure is different
     date: string; // Assuming date is a string, adjust if your structure is different
     recurring: string;
   }
@@ -35,8 +36,6 @@ interface Donation {
   interface OrganizationSummary {
     name: string;
     count: number;
-    totalAmount: number;
-    lastDonation: string;
   }
 
   interface MonthlyTotal {
@@ -44,21 +43,40 @@ interface Donation {
     total: number;
   }
 
-  const calculateMonthlyTotals = (donations, monthsBack = 12) => {
+  const calculateMonthlyTotals = (donations, monthsBack = 6) => {
     const now = new Date();
+    now.setHours(0, 0, 0, 0); // Normalize now to start of today to avoid hour-based discrepancies
     const monthlyTotals = Array.from({ length: monthsBack }).map((_, i) => ({
       month: new Date(now.getFullYear(), now.getMonth() - i, 1).toISOString().substr(0, 7),
       total: 0,
-    })).reverse();
+    })); // Keep chronological order
   
     donations.forEach(donation => {
-      if (!isNaN(donation.amount)) {
+      if (!isNaN(donation.donateAmt)) {
         const donationDate = new Date(donation.date);
-        // Adjust index calculation to correctly map the donation month to the monthlyTotals array
-        const monthDiff = (donationDate.getFullYear() - now.getFullYear()) * 12 + donationDate.getMonth() - now.getMonth();
-        const index = monthsBack - monthDiff - 1;
-        if (index >= 0 && index < monthsBack) {
-          monthlyTotals[index].total += donation.amount;
+        const endOfThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of the current month
+  
+        // Determine the start date for calculations (6 months ago or the donation date, whichever is later)
+        const startDate = new Date(now.getFullYear(), now.getMonth() - monthsBack + 1, 1);
+        const effectiveStartDate = startDate > donationDate ? startDate : donationDate;
+  
+        // Calculate occurrences for recurring donations
+        if (donation.recurring !== 'No') {
+          const occurrences = calculateOccurrences(donation.recurring, effectiveStartDate, endOfThisMonth, donationDate);
+          occurrences.forEach(occurrence => {
+            const occurrenceMonth = occurrence.toISOString().substr(0, 7);
+            const index = monthlyTotals.findIndex(month => month.month === occurrenceMonth);
+            if (index !== -1) {
+              monthlyTotals[index].total += donation.donateAmt;
+            }
+          });
+        } else {
+          // Handle one-time donations
+          const donationMonth = donationDate.toISOString().substr(0, 7);
+          const index = monthlyTotals.findIndex(month => month.month === donationMonth);
+          if (index !== -1) {
+            monthlyTotals[index].total += donation.donateAmt;
+          }
         }
       } else {
         console.error("Found NaN in donation amounts", donation);
@@ -68,59 +86,108 @@ interface Donation {
     return monthlyTotals;
   };
   
+  // Helper function to calculate occurrences of recurring donations
+  const calculateOccurrences = (recurringType, startDate, endDate, originalDate) => {
+    let occurrences = [];
+    let currentDate = new Date(startDate);
   
+    while (currentDate <= endDate) {
+      if (recurringType === 'Weekly') {
+        const weeksSinceDonation = Math.floor((currentDate - originalDate) / (7 * 24 * 60 * 60 * 1000));
+        if (weeksSinceDonation >= 0) {
+          occurrences.push(new Date(currentDate));
+        }
+        currentDate.setDate(currentDate.getDate() + 7);
+      } else if (recurringType === 'Monthly') {
+        const monthsSinceDonation = (currentDate.getFullYear() - originalDate.getFullYear()) * 12 + currentDate.getMonth() - originalDate.getMonth();
+        if (monthsSinceDonation >= 0) {
+          occurrences.push(new Date(currentDate));
+        }
+        currentDate.setMonth(currentDate.getMonth() + 1);
+      } else if (recurringType === 'Annually') {
+        const yearsSinceDonation = currentDate.getFullYear() - originalDate.getFullYear();
+        if (yearsSinceDonation >= 0 && currentDate.getMonth() === originalDate.getMonth()) {
+          occurrences.push(new Date(currentDate));
+        }
+        currentDate.setFullYear(currentDate.getFullYear() + 1);
+      }
+    }
   
-
-  const calculateUpcomingPayments = (donations) => {
-    // Assuming `donations` includes a `recurring` field with values like "Weekly", "Monthly", "Annually"
-    const now = new Date();
-    return donations.filter(donation => donation.recurring !== "No")
-      .map(donation => {
-        // Calculate next payment date based on `donation.date` and `donation.recurring`
-        // This is a simplified placeholder logic
-        const nextPaymentDate = new Date(donation.date); // Replace with actual calculation
-        return { ...donation, nextPaymentDate };
-      });
+    return occurrences;
   };
+  
+  
+  const calculateUpcomingPayments = (donations) => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Normalize the current date to the start of the day
+  
+    const oneMonthFromNow = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    console.log("donation in calc upcoming payments", donations);
+  
+    return donations
+      .filter(donation => donation.recurring !== "No" && new Date(donation.date) <= oneMonthFromNow)
+      .map(donation => {
+        // Calculate the next payment date based on the recurring type
+        let nextPaymentDate = new Date(donation.date);
+        while (nextPaymentDate < now) {
+          if (donation.recurring === 'Weekly') {
+            nextPaymentDate.setDate(nextPaymentDate.getDate() + 7);
+          } else if (donation.recurring === 'Monthly') {
+            nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
+          } else if (donation.recurring === 'Annually') {
+            nextPaymentDate.setFullYear(nextPaymentDate.getFullYear() + 1);
+          }
+        }
+  
+        // Only include if the next payment date is within the next month
+        if (nextPaymentDate <= oneMonthFromNow) {
+          return { ...donation, nextPaymentDate: nextPaymentDate.toLocaleDateString() };
+        }
+  
+        return null;
+      })
+      .filter(payment => payment !== null) // Filter out any nulls from the mapping step
+      .sort((a, b) => {
+        const [monthA, dayA, yearA] = a.nextPaymentDate.split('/').map(num => parseInt(num, 10));
+        const [monthB, dayB, yearB] = b.nextPaymentDate.split('/').map(num => parseInt(num, 10));
+        
+        const dateA = new Date(yearA, monthA - 1, dayA);
+        const dateB = new Date(yearB, monthB - 1, dayB);
+      
+        return dateA - dateB;
+      })
+      .map(payment => ({
+        ...payment,
+        amount: `${payment.donateAmt}`, // Format amount as a string with a dollar sign
+      }));
+  };
+   
 
   const calculateTopOrganizations = (donationsArray: Donation[]): OrganizationSummary[] => {
-    //console.log("donationsArray", donationsArray)
-    //console.log("is donations array an array", Array.isArray(donationsArray))
+    console.log("donationsArray", donationsArray);
+    
+    // Aggregate donation counts per organization
     const orgDonations: Record<string, OrganizationData> = donationsArray.reduce((acc, donation) => {
-      const { orgName, date } = donation;
+      const { orgName } = donation;
       if (acc[orgName]) {
         acc[orgName].count += 1;
-        acc[orgName].totalAmount += donation.amount; // donation.amount is already a number here
-        acc[orgName].lastDonation = acc[orgName].lastDonation > date ? acc[orgName].lastDonation : date;
       } else {
-        acc[orgName] = {
-          count: 1,
-          totalAmount: donation.amount, // donation.amount is already a number
-          lastDonation: date,
-        };
+        acc[orgName] = { count: 1 };
       }
       return acc;
     }, {});
   
+    // Sort organizations by the count of donations, take top 3
+    console.log("orgDonations", orgDonations);
     const sortedOrgs = Object.entries(orgDonations)
       .map(([name, data]) => ({
         name,
         count: data.count,
-        totalAmount: data.totalAmount,
-        lastDonation: data.lastDonation,
       }))
-      .sort((a, b) => {
-        if (b.count !== a.count) {
-          return b.count - a.count;
-        } else if (b.totalAmount !== a.totalAmount) {
-          return b.totalAmount - a.totalAmount;
-        } else {
-          // Explicitly convert dates to numbers for the subtraction operation
-          return +new Date(b.lastDonation) - +new Date(a.lastDonation);
-        }
-      })
+      .sort((a, b) => b.count - a.count) // Sort by count of donations only
       .slice(0, 3); // Take top 3
-    //console.log("sortedOrgs", sortedOrgs)
+    
+      console.log("sortedOrgs", sortedOrgs)
   
     return sortedOrgs;
   };
@@ -133,6 +200,8 @@ const Profile = ({ navigation }) => {
   const [monthlyDonations, setMonthlyDonations] = useState([]);
   const [upcomingPayments, setUpcomingPayments] = useState([]);
   const [orgLogos, setOrgLogos] = useState<Record<string, string>>({});
+  const [page, setPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(5); // Adjust number of items per page as needed
 
   const navigateToSettingPage = () => {
     navigation.navigate('SettingMain');
@@ -155,7 +224,9 @@ const Profile = ({ navigation }) => {
           // Process the donations data
           const topOrgs = calculateTopOrganizations(donationsArray);
           const monthlyTotals = calculateMonthlyTotals(donationsArray);
+          console.log("monthlyTotals", monthlyTotals)
           const upcomingPaymentsData = calculateUpcomingPayments(donationsArray);
+          console.log("upcomingPaymentsData", upcomingPaymentsData)
 
           console.log("monthlyTotals", monthlyTotals)
     
@@ -198,6 +269,10 @@ const Profile = ({ navigation }) => {
     });
   };
   
+  const numberOfPages = Math.ceil(upcomingPayments.length / itemsPerPage);
+  const from = page * itemsPerPage;
+  const to = Math.min((page + 1) * itemsPerPage, upcomingPayments.length);
+  const visiblePayments = upcomingPayments.slice(from, to);
   
 
 
@@ -207,7 +282,7 @@ const Profile = ({ navigation }) => {
     const labels = monthlyDonations.map(item => {
     const monthIndex = parseInt(item.month.substring(5), 10) - 1; // Converts "YYYY-MM" format to index
     return monthNames[monthIndex];
-    }).reverse(); // Assuming the most recent month is last, reverse if necessary
+    }).reverse(); 
 
     const dataValues = monthlyDonations.map(item => item.total).reverse(); // Ensure this matches the order of labels
 
@@ -275,69 +350,73 @@ const Profile = ({ navigation }) => {
         <Text style={styles.headerText} variant="headlineMedium">
         Donation History
         </Text>
+        <View style={styles.chartContainer}>
         <LineChart
-        data={{
-            labels: labels,
-            datasets: [
-            {
-                data: dataValues,
-            },
-            ],
-        }}
-        width={Dimensions.get("window").width - 16} // Adjust as needed
-        height={220} // Adjust as needed
-        yAxisLabel="$"
-        yAxisSuffix="K" // Use "K" if your values are in thousands, otherwise adjust or remove
-        yAxisInterval={1} // Adjust as needed
-        chartConfig={{
-            backgroundColor: "#C2C2C7",
-            backgroundGradientFrom: "#C2C2C7",
-            backgroundGradientTo: "#C2C2C7",
-            decimalPlaces: 2, // Adjust as needed
-            color: () => "#599884", // Directly returns the hex code for the line color
-            labelColor: () => "#ffffff", // Adjusts the color of the yAxis and xAxis labels
-            style: {
+            data={{
+                labels: labels,
+                datasets: [{ data: dataValues }],
+            }}
+            width={Dimensions.get("window").width - 40} // Reduced width for fitting and centering
+            height={220}
+            yAxisLabel="$"
+            yAxisSuffix="K"
+            yAxisInterval={1}
+            chartConfig={{
+                backgroundColor: "#C2C2C7",
+                backgroundGradientFrom: "#5A6F72",
+                backgroundGradientTo: "#599884",
+                decimalPlaces: 0,
+                color: () => "#C2C2C7",
+                labelColor: () => "#C2C2C7",
+                style: {
                 borderRadius: 16,
-            },
-            propsForDots: {
+                //paddingLeft: 16, // Added to provide padding for the Y-axis labels
+                },
+                propsForDots: {
                 r: "6",
                 strokeWidth: "2",
-                stroke: "#5A6F72", // Dot border color
-            },
-        }}
-        bezier
-        style={{
-            marginVertical: 8,
-            borderRadius: 16,
-        }}
-        />
-
-
-          {/* Upcoming Payments Section */}
-          <Text style={styles.headerText} variant="headlineMedium">Upcoming Payments</Text>
-          <View style={styles.tableContainer}>
-        {/*<ScrollView style={styles.tableCells}>
-            <View>
-            <DataTable>
-                <DataTable.Header>
-                <DataTable.Title style={styles.tableTitle}>Organization</DataTable.Title>
-                <DataTable.Title style={styles.tableTitle}>Next Payment</DataTable.Title>
-                <DataTable.Title style={styles.tableTitle}>Amount</DataTable.Title>
-                </DataTable.Header>
-                {upcomingPayments.map((payment, index) => (
-                <DataTable.Row 
-                    key={index} // Assuming each payment doesn't have a unique identifier; otherwise, use it here
-                    style={{ backgroundColor: index % 2 === 0 ? '#E0F0E3' : 'white' }}
-                >
-                    <DataTable.Cell>{payment.orgName}</DataTable.Cell>
-                    <DataTable.Cell>{payment.nextPaymentDate}</DataTable.Cell>
-                    <DataTable.Cell numeric>${payment.amount}</DataTable.Cell>
-                </DataTable.Row>
-                ))}
-            </DataTable>
-            </View>
-        </ScrollView>*/}
+                stroke: "#C2C2C7",
+                },
+                fromZero: true,
+            }}
+            bezier
+            style={{
+                marginVertical: 8,
+                borderRadius: 16,
+                alignSelf: 'center',
+            }}
+            />
         </View>
+          {/* Upcoming Payments Section */}
+          {/* Upcoming Payments Section with Pagination */}
+            <Text style={styles.headerText} variant="headlineMedium">Upcoming Payments</Text>
+            <DataTable>
+            <DataTable.Header>
+                <DataTable.Title>Organization</DataTable.Title>
+                <DataTable.Title>Next Payment</DataTable.Title>
+                <DataTable.Title numeric>Amount</DataTable.Title>
+            </DataTable.Header>
+
+            {visiblePayments.map((payment, index) => (
+                <DataTable.Row key={index}>
+                <DataTable.Cell>{payment.orgName}</DataTable.Cell>
+                <DataTable.Cell>{payment.nextPaymentDate}</DataTable.Cell>
+                <DataTable.Cell numeric>${payment.amount}</DataTable.Cell>
+                </DataTable.Row>
+            ))}
+
+            <DataTable.Pagination
+                page={page}
+                numberOfPages={numberOfPages}
+                onPageChange={(page) => setPage(page)}
+                label={`${from + 1}-${to} of ${upcomingPayments.length}`}
+                showFastPaginationControls
+                numberOfItemsPerPage={itemsPerPage}
+                onItemsPerPageChange={setItemsPerPage}
+                selectPageDropdownLabel="Rows per page"
+            />
+            </DataTable>
+
         </ScrollView>
       </SafeAreaView>
     </PaperProvider>
@@ -356,7 +435,7 @@ const styles = StyleSheet.create({
   infoPfpBackground: {
     width: '100%', 
     height: '100%',
-    backgroundColor: '#E0F0E3',
+    backgroundColor: '#599884',
   },
   infoPfp: {
     backgroundColor: 'white',
@@ -407,13 +486,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 7,
     borderRadius: 20,
-    padding: 10, // Adjust padding to ensure text isn't touching the borders
-
+    paddingTop: 10, // Add padding at the top
   },
   orgLogo: {
-    width: 90,
-    height: 70,
+    width: 80, // Slightly reduce width for better fit
+    height: 60, // Adjust height as needed
     resizeMode: 'contain',
+    marginBottom: 5, // Ensure some space between the logo and the text below
   },
   tableTitle: {
     justifyContent: 'flex-end',
@@ -440,6 +519,10 @@ const styles = StyleSheet.create({
   orgText: {
     // Assuming this is your style for the text in each organization box
     textAlign: 'center', // Center text horizontally
+  },
+  chartContainer: {
+    borderRadius: 16,
+    overflow: 'hidden', // Ensures the chart respects the borderRadius property
   },
 });
 

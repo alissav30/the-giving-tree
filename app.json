@@ -18,13 +18,22 @@
       "supportsTablet": true
     },
     "android": {
-        "adaptiveIcon": {
-            "foregroundImage": "./assets/adaptive-icon.png",
-            "backgroundColor": "#ffffff"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "33ceb1c4-41a9-47df-bf08-6433d5b7a012"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/33ceb1c4-41a9-47df-bf08-6433d5b7a012"
     }
   }
 }
