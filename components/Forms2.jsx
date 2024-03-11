@@ -29,7 +29,6 @@ const Forms2 = ({ navigation }) => {
 
     const DonationHistory = ( ) => (
         <View>
-            <FilterButtons />
             <DonationTable />
         </View>
       );
