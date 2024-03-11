@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Button, TouchableOpacity, Text, StyleSheet, ScrollView } from 'react-native'; // Import Button from react-native
+import { View, Button, TouchableOpacity, Text, StyleSheet, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native'; // Import Button from react-native
 import { DataTable, Searchbar } from 'react-native-paper';
 import { database } from '../../firebase.js'; // Adjust this path as necessary
 import { ref, onValue } from "firebase/database";
@@ -13,6 +13,8 @@ const DonationTable = () => {
     const [showRecurring, setShowRecurring] = React.useState(false); // New state for the filter
     const [NotRecurring, setNotRecurring] = React.useState(false); // New state for the filter
     const [activeButton, setActiveButton] = useState(null);
+    const [searchQuery, setSearchQuery] = React.useState('');
+
 
 
 
@@ -89,13 +91,28 @@ const DonationTable = () => {
 
     // Filter the donations based on the filterType state
     const filteredDonations = donations.filter((donation) => {
-        if (filterType === 'notRecurring') {
-            return donation.recurring === 'No';
-        } else if (filterType === 'recurring') {
-            return donation.recurring !== 'No';
+        const nonprofitName = donation.nonprofit.toLowerCase(); // Convert to lowercase for case-insensitive search
+
+        // if (filterType === 'notRecurring') {
+        //     return donation.recurring === 'No';
+        // } else if (filterType === 'recurring') {
+        //     return donation.recurring !== 'No';
+        // }
+        // // 'all' filter or default case
+        // return true;
+
+        if (nonprofitName.includes(searchQuery.toLowerCase()) || searchQuery === '') {
+            if (filterType === 'notRecurring') {
+                return donation.recurring === 'No';
+            } else if (filterType === 'recurring') {
+                return donation.recurring !== 'No';
+            } else {
+                // Handle other filter types or no filter
+                return true;
+            }
+        } else {
+            return false; // Nonprofit name doesn't match the search query
         }
-        // 'all' filter or default case
-        return true;
     });
 
     console.log(filteredDonations);
@@ -106,17 +123,28 @@ const DonationTable = () => {
         setPage(0);
     }, [itemsPerPage, showRecurring]);
 
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        // Add any additional logic you need for search
+    };
+    const handleFocus = () => {
+        // Prevent the keyboard from dismissing on focus
+        // You can add more logic here if needed
+      };
+    
     const SearchBar = () => {
-        const [searchQuery, setSearchQuery] = React.useState('');
       
         return (
-          <Searchbar
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <Searchbar
             placeholder="Search"
-            onChangeText={setSearchQuery}
+            onChangeText={handleSearch}
+            onFocus={handleFocus}
             value={searchQuery}
             style={{backgroundColor: '#FFFFFF'}}
-
           />
+          </TouchableWithoutFeedback>
+
         );
       };
 
@@ -148,8 +176,8 @@ const DonationTable = () => {
                 </TouchableOpacity>
             </View>
             <View style={styles.searchContainer}>
-                    <SearchBar />
-                </View>
+                <SearchBar />
+            </View>
 
 
             <DataTable>
