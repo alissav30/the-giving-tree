@@ -18,6 +18,12 @@ const Browse = ({ navigation }) => {
         require('../assets/stand_ad.png')
     ];
 
+    const carouselItems_no_btn = [
+        require('../assets/Banner_1_nobtn.png'),
+        require('../assets/Banner_2_nobtn.png'),
+        require('../assets/Banner_3_nobtn.png')
+    ];
+
     const categories = [
         ["Health", "health"],
         ["Animals", "Animals"],
@@ -78,7 +84,7 @@ const Browse = ({ navigation }) => {
             {/* Carousel for Ads */}
             <View>
                 <Carousel
-                    data={carouselItems}
+                    data={carouselItems_no_btn} /** Changed this to ad pics without btn*/
                     renderItem={renderCarouselItem}
                     sliderWidth={Dimensions.get('window').width}
                     itemWidth={Dimensions.get('window').width - 60}
