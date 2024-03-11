@@ -18,7 +18,6 @@ import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['ViewPropTypes will be removed from React Native']);
 LogBox.ignoreLogs(['When setting overflow to hidden']);
 
-
 const NavBar = ({ selectedIndex }) => {
   const [index, setIndex] = React.useState(0);
   const { currentTab, navigateToTab } = useNavigationContext();

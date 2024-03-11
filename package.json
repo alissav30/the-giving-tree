@@ -24,6 +24,7 @@
     "expo-firebase-core": "^6.0.0",
     "expo-linear-gradient": "~12.7.2",
     "expo-status-bar": "~1.11.1",
+    "expo-updates": "~0.24.11",
     "firebase": "^10.8.0",
     "react": "18.2.0",
     "react-icons": "^5.0.1",
