@@ -42,9 +42,13 @@ const styles = StyleSheet.create({
     },
     backButton: {
         marginBottom: 20,
+        alignSelf: 'center',
+        justifyContent: "center"
     },
     backButtonText: {
         color: '#5A6F72',
         fontSize: 18,
+        alignContent: "center"
+
     },
 });
