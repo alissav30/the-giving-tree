@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Image, StyleSheet, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Image, StyleSheet, Text, Dimensions, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Searchbar, Button, Card, Title, PaperProvider } from 'react-native-paper';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import organizationsData from '../organizations.json'; 
@@ -66,7 +66,8 @@ const Browse = ({ navigation }) => {
 
     return (
         <PaperProvider theme={theme}>
-        <ScrollView style={styles.container}>
+         <SafeAreaView style={{flex: 1}}>
+        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
             <Searchbar
                 placeholder="Search"
                 onChangeText={setSearchQuery}
@@ -126,6 +127,7 @@ const Browse = ({ navigation }) => {
                 </ScrollView>
             </View>
         </ScrollView>
+        </SafeAreaView>
         </PaperProvider>
     );
 };
@@ -134,6 +136,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 50,
+        paddingBottom: 400,
     },
     orgTitle: {
         fontSize: 15,
