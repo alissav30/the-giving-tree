@@ -427,7 +427,7 @@ const Profile = ({ navigation }) => {
 const styles = StyleSheet.create({
   infoContainer: {
     width: '100%', 
-    height: 150,
+    height: 125,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: 'column', 
@@ -452,24 +452,23 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   infoUsername: {
-    color: "#185A37",
     fontWeight: 'bold', 
     margin: 10,
     textAlign: 'center',
   }, 
   infoCaption: {
-    color: "#185A37",
     bottom: 10,
     textAlign: 'center',
   },
   topOrgsContainer: {
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 11
   },
   headerText: {
-    color: "#185A37",
-    margin: 8,
+    margin: 2,
     marginTop: 0,
+    marginBottom: 0,
     textAlign: 'left',
     marginLeft: 20,
   },
@@ -523,6 +522,7 @@ const styles = StyleSheet.create({
   chartContainer: {
     borderRadius: 16,
     overflow: 'hidden', // Ensures the chart respects the borderRadius property
+    marginBottom: 11
   },
 });
 
