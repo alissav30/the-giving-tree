@@ -11,12 +11,15 @@ import {
   Surface,
   Avatar, 
   Divider,
+  Dialog,
+  Paragraph
 } from "react-native-paper";
 import { LineChart } from "react-native-chart-kit"; 
-import { ref, query, orderByChild, limitToLast, get, onValue } from "firebase/database";
+import { ref, query, orderByChild, limitToLast, get, onValue, remove } from "firebase/database";
 import { database } from '../firebase.js'; 
 import organizationsData from '../organizations.json';
 import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
+import { IconButton } from 'react-native-paper';
 
 
 
@@ -192,7 +195,6 @@ interface Donation {
     return sortedOrgs;
   };
   
-
   
 
 const Profile = ({ navigation }) => {
@@ -202,12 +204,18 @@ const Profile = ({ navigation }) => {
   const [orgLogos, setOrgLogos] = useState<Record<string, string>>({});
   const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(5); // Adjust number of items per page as needed
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
+  const [currentDonationKey, setCurrentDonationKey] = useState(null);
 
   const navigateToSettingPage = () => {
     navigation.navigate('SettingMain');
   };
 
-
+  const showDeleteConfirmation = (donationKey) => {
+    setCurrentDonationKey(donationKey);
+    setIsDialogVisible(true);
+  };
+  
   useEffect(() => {
     const fetchAndUpdateData = async () => {
       try {
@@ -218,6 +226,7 @@ const Profile = ({ navigation }) => {
           const donationsArray = donationsData && typeof donationsData === 'object'
             ? Object.keys(donationsData).map(key => ({
                 ...donationsData[key],
+                key,
               }))
             : [];
     
@@ -285,6 +294,23 @@ const Profile = ({ navigation }) => {
     }).reverse(); 
 
     const dataValues = monthlyDonations.map(item => item.total).reverse(); // Ensure this matches the order of labels
+
+
+    const handleDeleteDonation = async (donationKey) => {
+        if (!donationKey) return;
+      
+        const donationRef = ref(database, `donations/${donationKey}`);
+        try {
+          await remove(donationRef);
+          setUpcomingPayments(upcomingPayments.filter(payment => payment.key !== donationKey));
+          console.log('Donation removed successfully');
+        } catch (error) {
+          console.error("Failed to delete donation: ", error);
+        }
+      };
+      
+      
+      
 
   
 
@@ -395,6 +421,7 @@ const Profile = ({ navigation }) => {
                 <DataTable.Title>Organization</DataTable.Title>
                 <DataTable.Title>Next Payment</DataTable.Title>
                 <DataTable.Title numeric>Amount</DataTable.Title>
+                <DataTable.Title numeric>Cancel</DataTable.Title>
             </DataTable.Header>
 
             {visiblePayments.map((payment, index) => (
@@ -402,6 +429,13 @@ const Profile = ({ navigation }) => {
                 <DataTable.Cell>{payment.orgName}</DataTable.Cell>
                 <DataTable.Cell>{payment.nextPaymentDate}</DataTable.Cell>
                 <DataTable.Cell numeric>${payment.amount}</DataTable.Cell>
+                <DataTable.Cell numeric>
+                <IconButton
+                    icon="delete"
+                    size={20}
+                    onPress={() => showDeleteConfirmation(payment.key)} // Update to use showDeleteConfirmation
+                />
+                </DataTable.Cell>
                 </DataTable.Row>
             ))}
 
@@ -416,6 +450,22 @@ const Profile = ({ navigation }) => {
                 selectPageDropdownLabel="Rows per page"
             />
             </DataTable>
+            <Portal>
+            <Dialog visible={isDialogVisible} onDismiss={() => setIsDialogVisible(false)}>
+                <Dialog.Title>Cancel Recurring Payment</Dialog.Title>
+                <Dialog.Content>
+                <Paragraph>Are you sure you want to cancel your recurring payment?</Paragraph>
+                </Dialog.Content>
+                <Dialog.Actions>
+                <Button theme={{ colors: { primary: "#5A6F72" } }} onPress={() => setIsDialogVisible(false)}>No</Button>
+                <Button theme={{ colors: { primary: "#5A6F72" } }} onPress={() => {
+                    handleDeleteDonation(currentDonationKey);
+                    setIsDialogVisible(false);
+                }}>Yes</Button>
+                </Dialog.Actions>
+            </Dialog>
+            </Portal>
+
 
         </ScrollView>
       </SafeAreaView>
