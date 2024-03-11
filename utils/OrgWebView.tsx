@@ -19,6 +19,7 @@ export default function OrgWebView({ route, navigation }) {
                 source={{ uri: link }}
                 // Add a ref to the WebView to access its methods
                 ref={(ref) => (this.webview = ref)}
+                style={{ flex: 1, marginTop: 50 }}
             />
             <TouchableOpacity
                 style={styles.backButton}
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
         flex: 1, 
         alignItems: 'center', 
         justifyContent: 'center',
+        
     },
     backButton: {
         marginBottom: 20,

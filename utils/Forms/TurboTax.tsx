@@ -18,6 +18,8 @@ export default function TurboTax({ route, navigation }) {
                 source={{ uri: 'https://myturbotax.intuit.com' }}
                 // Add a ref to the WebView to access its methods
                 ref={(ref) => (this.webview = ref)}
+                style={{ flex: 1, marginTop: 50 }}
+
             />
             <TouchableOpacity
                 style={styles.backButton}
