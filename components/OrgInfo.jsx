@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, Linking } from 'react-native';
 import { Card, Title, Paragraph, Button } from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
@@ -7,12 +7,21 @@ import { Dimensions } from 'react-native';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import app from '../firebase.js'; // Adjust this path to your Firebase config file
 import organizationsData from '../organizations.json';
+import { WebView } from "react-native-webview";
+
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const OrgInfo = ({ navigation, route }) => {
     const { orgKey } = route.params;
     const [orgInfo, setOrgInfo] = useState(null);
+
+
+    const navigateToWebView = (link) => {
+        navigation.navigate('OrgWebView', { link });
+
+    };
+
 
     useEffect(() => {
         const orgData = organizationsData.organizations[orgKey];
@@ -70,7 +79,8 @@ const OrgInfo = ({ navigation, route }) => {
             </View>
             <Paragraph style={styles.mission}>{orgInfo.organization_mission_statement}</Paragraph>
             
-            <TouchableOpacity onPress={() => Linking.openURL(orgInfo.website_url)} style={styles.visitButton}>
+            <TouchableOpacity onPress={() => navigateToWebView(orgInfo.website_url)} style={styles.visitButton}>
+                {/**Linking.openURL(orgInfo.website_url) */}
                 <Text style={styles.linkText}>Visit their site</Text>
                 <Icon name="chevron-right" size={20} color="#185A37" />
             </TouchableOpacity>
