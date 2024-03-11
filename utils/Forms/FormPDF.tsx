@@ -3,7 +3,9 @@ import { StyleSheet, Dimensions, View, TouchableOpacity, Text } from 'react-nati
 import { WebView } from "react-native-webview";
 
 export default function FormPDF({navigation}) {
-    const source = require('../../assets/faketaxform.pdf')
+    const source = {
+        uri: 'https://firebasestorage.googleapis.com/v0/b/thegivingtree-fa759.appspot.com/o/faketaxform.pdf?alt=media&token=311e2d80-cf7c-4078-80f7-75cbea3c6aa1'
+    };
     return (
         <View style={styles.container}>
             <WebView

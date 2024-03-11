@@ -123,30 +123,23 @@ const DonationTable = () => {
         setPage(0);
     }, [itemsPerPage, showRecurring]);
 
-    const handleSearch = (query) => {
+    const handleSearchQueryChange = query => {
         setSearchQuery(query);
-        // Add any additional logic you need for search
+    }
+
+    const handleSearchSubmit = () => {
+        // Dismiss the keyboard when the user submits the search
+        Keyboard.dismiss();
+        
+        // Add the search functionality here
+        console.log("Searching for:", searchQuery);
     };
+        
     const handleFocus = () => {
         // Prevent the keyboard from dismissing on focus
         // You can add more logic here if needed
       };
     
-    const SearchBar = () => {
-      
-        return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <Searchbar
-            placeholder="Search"
-            onChangeText={handleSearch}
-            onFocus={handleFocus}
-            value={searchQuery}
-            style={{backgroundColor: '#FFFFFF'}}
-          />
-          </TouchableWithoutFeedback>
-
-        );
-      };
 
 
     return (
@@ -176,7 +169,14 @@ const DonationTable = () => {
                 </TouchableOpacity>
             </View>
             <View style={styles.searchContainer}>
-                <SearchBar />
+            <Searchbar
+                placeholder="Search"
+                onChangeText={handleSearchQueryChange}
+                onEndEditing={handleSearchSubmit} // Use this for handling submit
+                onFocus={handleFocus}
+                value={searchQuery}
+                style={{backgroundColor: '#FFFFFF'}}
+          />
             </View>
 
 
@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
         marginBottom: 30,
       }
 });
+
 
 export default DonationTable;
 

@@ -91,7 +91,7 @@ const Trees = () => {
 
       {patches.map((patch, index) => (
         <View key={patch.key} style={[styles.circlePatch, styles[patch.side + 'Patch']]}>
-          {index <= treeIndex  ? (
+          {index <= treeIndex ? (
             <Image source={treeImages[index % treeImages.length]} style={styles.treePerson} />
           ) : null}
           {index === treeIndex + 1 ? (
